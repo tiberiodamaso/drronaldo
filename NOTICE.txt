@@ -1,0 +1,33 @@
+Dr. Ronaldo Lopes - avisos de licenca de terceiros
+==================================================
+
+Parte do CSS e do JavaScript deste site deriva de um tema comercial
+distribuido sob a GNU General Public License v2.
+    License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+O cabecalho de licenca desse tema foi retirado de assets/css/tema.css
+durante a migracao; a atribuicao passou a viver aqui.
+
+Bibliotecas embutidas nos arquivos de assets/:
+
+  jQuery 3.7.1 e jQuery Migrate 3.4.1 (https://jquery.com)
+      licenca MIT, OpenJS Foundation e demais contribuidores.
+
+  Animate.css (c) 2015 Daniel Eden (http://daneden.me/animate)
+      licenca MIT.
+
+  Waypoints, de Caleb Troughton
+      licenca MIT. Vem embutido em assets/js/waypoint.js.
+
+  smoothscroll
+      licenca MIT. Vem embutido em assets/js/smoothscroll.js.
+
+  Font Awesome Free 5.15.1 (https://fontawesome.com)
+      arquivos de fonte sob SIL OFL 1.1, icones sob CC BY 4.0,
+      codigo sob MIT. Em assets/fonts/fa-*.woff2 e fa-*.woff.
+
+  Fonte de icones ETmodules, gerada com IcoMoon.
+      Acompanha o tema, sob a mesma GPL v2. Em assets/fonts/etmodules.woff.
+
+Fontes de texto (Cinzel, Montserrat, Asap Condensed) sao carregadas do
+Google Fonts sob a SIL Open Font License 1.1; nao ha copia no repositorio.

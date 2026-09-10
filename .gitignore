@@ -1,0 +1,10 @@
+# Os scripts da migracao ficam no disco, nunca no site publicado.
+tools/
+
+.DS_Store
+*.bak
+__pycache__/
+
+# Artefatos das sondas headless, escritos ao lado do index.html
+_probe.html
+_t.html
