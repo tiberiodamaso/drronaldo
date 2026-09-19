@@ -62,9 +62,18 @@ Aceitação verificada em deploy na raiz **e** em subcaminho: **44 referências 
 0 ausentes, 0 absolutas na raiz**. Sonda headless a 320, 360, 390, 768, 1024, 1280,
 1440 e 1920 px: **zero erros de JS**, sem transbordo horizontal
 (`scrollWidth == clientWidth` em toda largura), sem imagem quebrada, GTM confirmado
-carregando e populando o `dataLayer`. A/B de screenshot contra a captura original a
-1440, 768 e 500 px: **0,000% de pixels divergentes**, dentro do ruído do próprio
-controle (original × original).
+carregando e populando o `dataLayer`.
+
+O A/B de screenshot contra a captura original cobre a **página inteira** e hoje
+acusa **duas faixas de diferença por largura, de 15 a 19 linhas cada** — exatamente
+os dois textos corrigidos na errata, e nada mais. O controle (original × original)
+fica em 0,000%, então qualquer terceira faixa que apareça é regressão de verdade.
+
+**Cuidado com a altura de `SIZES` em `shots.py`.** Até 2026-09-19 ela era 3000 px,
+mas a home tem **6660 px a 1440 e 9066 px a 500** — ou seja, o A/B vinha comparando
+só o topo, e mais da metade da página nunca foi conferida. Isso só apareceu quando a
+correção do CRM, que fica a 6096 px, não surgiu no diff. Se o conteúdo crescer, meça
+de novo e suba os valores.
 
 Os únicos hosts externos que a página contata são `www.googletagmanager.com`,
 `fonts.googleapis.com` e `fonts.gstatic.com`. Os links de saída vão para `wa.me`,
@@ -190,6 +199,27 @@ e o JS do tema selecionam por eles. Renomear quebra a página.
   para o Google Fonts no lugar do `dns-prefetch`.
 - **Faltava `rel="noopener"`** em doze dos treze links `target="_blank"`. Ver a seção
   de revisão de segurança.
+
+### Errata de conteúdo
+
+Erros de digitação que vieram do texto original, corrigidos em 2026-09-19. Vivem na
+lista `ERRATA` do `build.py`, **não numa edição solta no `index.html`**: o build
+regrava o arquivo inteiro a cada execução e desfaria qualquer conserto feito só na
+saída. Cada entrada exige exatamente uma ocorrência, senão o build falha.
+
+| era | virou |
+|---|---|
+| `CRM G0 15751` | `CRM GO 15751` — GO de Goiás, estava com zero |
+| `Ansiedadae` | `Ansiedade` — no cartão de especialidades |
+
+**Ainda por decidir**, encontrado na mesma revisão e deixado como está:
+
+- `psiquiatria da infancia e adolescência pelo CHC-UFPR`, no cartão de Especialização,
+  sem o acento de **infância** — a mesma palavra aparece acentuada em quatro outros
+  pontos da página. É texto do próprio site, não citação.
+- Três deslizes **dentro dos depoimentos**: `desde a chega no consultório` (chegada) e
+  `tbm` no de Thais Kellen, e `Dr gostaria` sem ponto no de Ariadne Uhdre Juvencio.
+  São palavras dos pacientes; corrigir altera uma citação. Não mexa sem combinar.
 
 ## Dados EXIF
 
