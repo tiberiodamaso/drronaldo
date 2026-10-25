@@ -8,14 +8,18 @@ O site estático de **Dr. Ronaldo Lopes** — psiquiatra geral e da infância e
 adolescência, em Goiânia (GO). Conteúdo em pt-BR. Uma **única página** (`index.html`)
 com navegação por âncoras, mais a árvore `assets/`.
 
-O site é uma landing page: seis seções (Especialidades, Formação, Atuação,
-Experiência, Depoimentos, Contato) e um único caminho de conversão, o WhatsApp
-`+55 62 98113-4061`. **Não existe blog, artigo, formulário nem `<input>`** em lugar
-nenhum. Os nove botões de contato levam todos ao mesmo número.
+O site é uma landing page: sete seções (Como funciona a consulta online,
+Especialidades, Formação, Atuação, Experiência, Depoimentos, Contato) e um único
+destino de conversão, o WhatsApp `+55 62 98113-4061`, com **dois caminhos: consulta
+online e consulta presencial em Goiânia**. **Não existe blog, artigo, formulário nem
+`<input>`** em lugar nenhum. Ver a seção *Agendamento: online × presencial*.
 
 Começou como uma captura Simply Static de uma instalação WordPress 7.1 / Divi 5.12.1
-e foi migrado em **2026-09-09**. Não há WordPress, PHP, etapa de build, gerenciador de
-pacotes nem testes. **Editar significa editar HTML/CSS/JS à mão.**
+e foi migrado em **2026-09-09**. Não há WordPress, PHP, gerenciador de pacotes nem
+testes. **O `index.html` e o `assets/` são saída de `tools/build.py`** e são regravados
+por inteiro a cada execução: toda mudança de conteúdo, marcação ou CSS entra no
+`build.py`, e o site é regenerado rodando o build. Edição feita à mão no `index.html`
+some no próximo build.
 
 Todos os caminhos são relativos, então o site funciona na raiz de um domínio *e* sob
 um subcaminho (`user.github.io/repo/`). `.nojekyll` está commitado.
@@ -64,16 +68,24 @@ Aceitação verificada em deploy na raiz **e** em subcaminho: **44 referências 
 (`scrollWidth == clientWidth` em toda largura), sem imagem quebrada, GTM confirmado
 carregando e populando o `dataLayer`.
 
-O A/B de screenshot contra a captura original cobre a **página inteira** e hoje
-acusa **duas faixas de diferença por largura, de 15 a 19 linhas cada** — exatamente
-os dois textos corrigidos na errata, e nada mais. O controle (original × original)
-fica em 0,000%, então qualquer terceira faixa que apareça é regressão de verdade.
+O A/B de screenshot contra a captura original cobre a **página inteira**. Até
+2026-10-24 ele acusava **duas faixas de diferença por largura, de 15 a 19 linhas
+cada** — exatamente os dois textos corrigidos na errata, e nada mais. **Desde
+2026-10-25 isso não vale mais:** a faixa de formato no topo empurra a página inteira
+para baixo e a seção nova entra logo após o hero, então original × site atual difere
+em praticamente todas as linhas e deixou de servir para achar regressão. O controle
+(original × original) continua em 0,000%.
 
-**Cuidado com a altura de `SIZES` em `shots.py`.** Até 2026-09-19 ela era 3000 px,
-mas a home tem **6660 px a 1440 e 9066 px a 500** — ou seja, o A/B vinha comparando
-só o topo, e mais da metade da página nunca foi conferida. Isso só apareceu quando a
-correção do CRM, que fica a 6096 px, não surgiu no diff. Se o conteúdo crescer, meça
-de novo e suba os valores.
+Para conferir regressão agora, compare **o build anterior com o atual**: gere o build
+do commit anterior num diretório à parte, sirva-o na porta 8888 e rode o `shots.py`
+com ele como `ORIG`. Aí qualquer faixa de diferença fora do que se mexeu é regressão
+de verdade.
+
+**Cuidado com a altura de `SIZES` em `shots.py`.** Até 2026-09-19 ela era 3000 px e
+o A/B comparava só o topo — isso só apareceu quando a correção do CRM, a 6096 px, não
+surgiu no diff. Em 2026-10-25 a home tem **7363 px a 1440, 9058 px a 768 e 10178 px
+a 500**, e `SIZES` foi para 7800 / 9600 / 10800. Se o conteúdo crescer, meça de novo
+e suba os valores.
 
 Os únicos hosts externos que a página contata são `www.googletagmanager.com`,
 `fonts.googleapis.com` e `fonts.gstatic.com`. Os links de saída vão para `wa.me`,
@@ -202,24 +214,92 @@ e o JS do tema selecionam por eles. Renomear quebra a página.
 
 ### Errata de conteúdo
 
-Erros de digitação que vieram do texto original, corrigidos em 2026-09-19. Vivem na
-lista `ERRATA` do `build.py`, **não numa edição solta no `index.html`**: o build
-regrava o arquivo inteiro a cada execução e desfaria qualquer conserto feito só na
-saída. Cada entrada exige exatamente uma ocorrência, senão o build falha.
+Erros de digitação que vieram do texto original, corrigidos em 2026-09-19 e
+2026-09-20. Vivem na lista `ERRATA` do `build.py`, **não numa edição solta no
+`index.html`**: o build regrava o arquivo inteiro a cada execução e desfaria qualquer
+conserto feito só na saída. Cada entrada exige exatamente uma ocorrência, senão o
+build falha.
+
+Texto do próprio site:
 
 | era | virou |
 |---|---|
 | `CRM G0 15751` | `CRM GO 15751` — GO de Goiás, estava com zero |
 | `Ansiedadae` | `Ansiedade` — no cartão de especialidades |
+| `infancia e adolescência` | `infância e adolescência` — no cartão de Especialização |
 
-**Ainda por decidir**, encontrado na mesma revisão e deixado como está:
+Depoimentos, corrigidos com o cliente de acordo. São palavras dos pacientes: aqui só
+entra erro de grafia, abreviação e pontuação, e a voz de cada um fica como está.
+**Não reescreva depoimento além disso.**
 
-- `psiquiatria da infancia e adolescência pelo CHC-UFPR`, no cartão de Especialização,
-  sem o acento de **infância** — a mesma palavra aparece acentuada em quatro outros
-  pontos da página. É texto do próprio site, não citação.
-- Três deslizes **dentro dos depoimentos**: `desde a chega no consultório` (chegada) e
-  `tbm` no de Thais Kellen, e `Dr gostaria` sem ponto no de Ariadne Uhdre Juvencio.
-  São palavras dos pacientes; corrigir altera uma citação. Não mexa sem combinar.
+| era | virou |
+|---|---|
+| `Dr Ronaldo cuida` | `Dr. Ronaldo cuida` |
+| `desde a chega no consultório` | `desde a chegada no consultório` |
+| `mas tbm com a certeza` | `mas também com a certeza` |
+| `Dr gostaria de expressar` | `Dr., gostaria de expressar` — vocativo |
+| `hipomania , mas` | `hipomania, mas` — espaço antes da vírgula |
+
+## Agendamento: online × presencial — 2026-10-25
+
+Muitos contatos chegavam de outras cidades achando que a consulta seria presencial
+na cidade deles, e muitos abriam conversa sem intenção real. Desde 2026-10-25 a
+página deixa o formato claro antes do clique e faz a pessoa escolher. Tudo sai da
+etapa do WhatsApp no `build.py` (`FORMATOS`, `bloco()`, `PASSOS`, `FAIXA`).
+
+**Só 6 links levam `wa.me`**, em três blocos de dois botões, lado a lado no desktop e
+empilhados no celular:
+
+| bloco | onde | classe de instância | âncora |
+|---|---|---|---|
+| hero | no lugar do antigo "Marcar consulta" | `et_pb_button_0` | — |
+| consulta-online | fim da seção nova | nenhuma | `#agendar` |
+| contato | no lugar do antigo "Vamos conversar" | `et_pb_button_5` | `#agendar-contato` |
+
+- **Consulta online** — "Todo o Brasil · a partir de 12 anos" —
+  `data-formato="online"`.
+- **Consulta presencial em Goiânia** — "Crianças e adolescentes" —
+  `data-formato="presencial"`.
+- Cada link leva também `data-origem` (`hero`, `consulta-online`, `contato`),
+  `target="_blank" rel="noopener"` e uma mensagem própria, gerada com
+  `urllib.parse.quote`. As duas mensagens contêm **"Vim pelo site do Dr. Ronaldo"**: é
+  o que identifica no WhatsApp que o contato veio do site. Não tire.
+- Abaixo de cada bloco: "Respondemos de segunda a sexta, das 9h às 17h."
+
+**O resto não abre o WhatsApp.** Os botões do meio da página (`et_pb_button_1` a `_4`,
+com os textos originais) e a bolha verde flutuante (`et_pb_icon_0`) rolam até
+`#agendar`. O telefone do contato (`et_pb_blurb_3`) rola até `#agendar-contato`, o
+bloco logo abaixo dele. Nenhum desses contém `wa.me`, de propósito: assim não
+disparam a conversão.
+
+**A seção `#consulta-online`** ("Como funciona a consulta online", quatro passos)
+fica logo após o hero. O anúncio da campanha online aponta para
+`drronaldolopes.com.br/#consulta-online`: **não renomeie esse id.**
+
+**A faixa do topo** ("Atendimento online para todo o Brasil e brasileiros no
+exterior · Presencial somente em Goiânia") é `position: sticky`, e não `fixed`. O
+cabeçalho do site rola com a página, então a faixa ocupa espaço próprio no fluxo e
+não cobre nada no carregamento. No celular ela quebra em duas linhas (45 px); no
+desktop tem uma (33 px).
+
+**O tema não sabe da faixa** ao rolar até uma âncora: `et_pb_smooth_scroll` só
+desconta o cabeçalho fixo do Divi, que este site não usa. Por isso `#agendar` tem
+`padding-top:60px; margin-top:-48px`. O visual não muda, e a rolagem para com os
+botões abaixo da faixa. As seções do tema já têm respiro de sobra no topo.
+`#agendar-contato` não precisa disso: fica no fim da página, que nunca rola o
+bastante para levá-lo ao topo.
+
+**O `build.py` falha** se houver um número de links `wa.me` diferente de 6, se algum
+estiver sem `data-formato` ou sem "Vim pelo site do Dr. Ronaldo", ou se algum
+`href="#…"` apontar para um id que não existe.
+
+**Regras de conteúdo (publicidade médica, CFM):** nada de adjetivo de superioridade
+("melhor", "referência", "renomado"), promessa de resultado, depoimento novo nem
+preço de consulta.
+
+A contagem de conversões caiu de patamar a partir de 2026-10-25: há menos links
+`wa.me` e um passo de escolha antes do WhatsApp. Não compare com o período anterior
+como se fosse a mesma métrica.
 
 ## Dados EXIF
 
@@ -295,3 +375,13 @@ O contêiner é `GTM-PZ346GTV`, com o par snippet no `<head>` e `<noscript>` no 
 do `<body>`. `probe.py` confere em toda largura que `window.google_tag_manager`
 existe, que a chave do contêiner aparece nele e que o `dataLayer` recebeu o evento
 `gtm.js`. **Não mexa nesses dois blocos sem rodar a sonda depois.**
+
+**A medição é toda no contêiner**; não entra gtag, pixel nem código de conversão no
+HTML. O acionador de conversão é **"Click URL contém wa.me"**. Uma variável do
+contêiner identifica a origem do clique pelas classes de instância do tema
+(`et_pb_button_0`…`_5`, `et_pb_icon_0`, `et_pb_blurb_3`), por isso **essas classes
+ficam**. O bloco de `#consulta-online` não tem classe de instância, e para ele essa
+variável sai vazia: o caminho robusto é ler os atributos `data-origem` e
+`data-formato` com variáveis de *Atributo de dados*. Os `<span>` dentro dos botões
+têm `pointer-events:none`, para que o elemento clicado seja sempre o `<a>`, mesmo
+num acionador do tipo "Todos os elementos".
