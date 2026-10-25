@@ -163,4 +163,8 @@ a:hover{color:var(--marca-escura)}
 .bolha{position:fixed;right:20px;bottom:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:40;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--whatsapp);color:#fff;box-shadow:0 4px 14px rgba(10,40,25,.25);transition:background-color .15s}
 .bolha:hover{background:var(--whatsapp-escuro);color:#fff}
 .bolha svg{width:32px;height:32px;fill:currentColor}
-@media (max-width:599px){.bolha{right:14px;bottom:14px;width:56px;height:56px}.rodape{padding-bottom:96px}}
+@media (max-width:599px){
+  .bolha{right:14px;bottom:14px;width:56px;height:56px}
+  .rodape{padding-bottom:96px}
+  .rodape__grade{flex-direction:column;gap:20px;text-align:center}
+}
