@@ -5,24 +5,37 @@ Orientações para o Claude Code (claude.ai/code) ao trabalhar neste repositóri
 ## O que é este repositório
 
 O site estático de **Dr. Ronaldo Lopes** — psiquiatra geral e da infância e
-adolescência, em Goiânia (GO). Conteúdo em pt-BR. Uma **única página** (`index.html`)
-com navegação por âncoras, mais a árvore `assets/`.
+adolescência, em Goiânia (GO), CRM-GO 15751, RQE 20033 e 20034. Conteúdo em pt-BR.
+Uma **única página** (`index.html`) com navegação por âncoras, mais a árvore
+`assets/`.
 
-O site é uma landing page: sete seções (Como funciona a consulta online,
-Especialidades, Formação, Atuação, Experiência, Depoimentos, Contato) e um único
-destino de conversão, o WhatsApp `+55 62 98113-4061`, com **dois caminhos: consulta
-online e consulta presencial em Goiânia**. **Não existe blog, artigo, formulário nem
-`<input>`** em lugar nenhum. Ver a seção *Agendamento: online × presencial*.
+O site é uma landing page: hero, sete seções (Como funciona a consulta online,
+Especialidades, Formação, Atuação, Experiência, Depoimentos, Contato) e rodapé, com
+um único destino de conversão, o WhatsApp `+55 62 98113-4061`, por **dois caminhos:
+consulta online e consulta presencial em Goiânia**. **Não existe blog, artigo,
+formulário nem `<input>`** em lugar nenhum.
 
-Começou como uma captura Simply Static de uma instalação WordPress 7.1 / Divi 5.12.1
-e foi migrado em **2026-09-09**. Não há WordPress, PHP, gerenciador de pacotes nem
-testes. **O `index.html` e o `assets/` são saída de `tools/build.py`** e são regravados
-por inteiro a cada execução: toda mudança de conteúdo, marcação ou CSS entra no
-`build.py`, e o site é regenerado rodando o build. Edição feita à mão no `index.html`
-some no próximo build.
+**O `index.html` e o `assets/` são saída de `tools/build.py`** e são regravados por
+inteiro a cada execução. Toda mudança de texto, marcação ou estilo entra nas fontes
+em `tools/src/` (ou no `build.py`), e o site é regenerado rodando o build. Edição
+feita à mão no `index.html` some no próximo build. Não há WordPress, PHP, gerenciador
+de pacotes nem etapa de build no servidor.
 
 Todos os caminhos são relativos, então o site funciona na raiz de um domínio *e* sob
 um subcaminho (`user.github.io/repo/`). `.nojekyll` está commitado.
+
+**Publicar é fazer push em `main`**: o GitHub Pages serve a raiz do branch em um ou
+dois minutos.
+
+## Histórico
+
+| data | o que aconteceu |
+|---|---|
+| 2026-09-09 | Migração da captura Simply Static do WordPress 7.1 / Divi 5.12.1 para GitHub Pages |
+| 2026-09-19/20 | Errata de digitação no texto e nos depoimentos |
+| 2026-10-25 | Agendamento separado em online × presencial; faixa de formato; seção `#consulta-online` |
+| 2026-10-25 | Virada de DNS concluída; o WordPress antigo foi desativado |
+| 2026-10-25 | **Redesign**: o Divi saiu; HTML semântico, CSS e JS próprios |
 
 ## Domínio e DNS — virada CONCLUÍDA
 
@@ -33,10 +46,8 @@ ativo até 2028-07-21. `CNAME`, `sitemap.xml`, `robots.txt` e o
 constante `CANONICO`.
 
 **O WordPress antigo foi desativado.** Ele rodava no A `157.230.185.95`
-(DigitalOcean), e a migração partiu do que estava mesmo no ar ali em 2026-09-09:
-mesmo título, mesmo contêiner `GTM-PZ346GTV` e o mesmo `wa.me/+55...` quebrado da
-captura. Nenhum registro aponta mais para aquele IP. A cópia que sobrou dele é o
-arquivo da captura em `../` (ver abaixo).
+(DigitalOcean); a migração partiu do que estava mesmo no ar ali em 2026-09-09.
+Nenhum registro aponta mais para aquele IP.
 
 Estado conferido em 2026-10-25:
 
@@ -45,80 +56,85 @@ Estado conferido em 2026-10-25:
   185.199.108.153   185.199.109.153   185.199.110.153   185.199.111.153
   ```
 - `www` é CNAME para `tiberiodamaso.github.io` e redireciona (301) para o ápice;
-- **HTTPS forçado**: `http://` responde 301 para `https://`, e o certificado está
-  válido;
-- o que responde no domínio é este repositório (`server: GitHub.com`), já com a
-  faixa de formato de 2026-10-25.
+- **HTTPS forçado**: `http://` responde 301 para `https://`.
 
-Publicar é fazer push em `main`: o Pages serve a raiz do branch em um ou dois
-minutos.
+## Estrutura
 
-## Estado da migração — CONCLUÍDA
+```
+index.html          a página inteira (gerada)
+assets/css/site.css a folha única do site (gerada a partir de tools/src/site.css)
+assets/js/site.js   7 linhas: fecha o menu do celular após escolher uma seção
+assets/img/         logo horizontal, logo vertical branco, 3 favicons,
+                    2 fotos (consultorio-1, consultorio-2) em 3 tamanhos cada
+CNAME               drronaldolopes.com.br, para o GitHub Pages
+robots.txt          libera tudo, aponta o sitemap
+sitemap.xml         uma URL: a home
+.nojekyll           impede o Jekyll de comer o que começa com _
+NOTICE.txt          licenças de terceiros (hoje, só o ícone do WhatsApp, CC0)
+```
 
-|  | antes | depois |
-|---|---|---|
-| Arquivos | 3340 | **44** (versionados) |
-| Tamanho | 148 MB | **1,6 MB** |
-| Páginas HTML | 4 | **1** |
-| `index.html` | 92 KB | **45 KB** |
-| Caminhos | absolutos na raiz | **relativos** |
-| Diretórios | `wp-content/`, `wp-includes/` | **`assets/`** |
-| CSS | 2 arquivos + 3 blocos embutidos (43 KB inline) | **3 arquivos, nada inline** |
-| Fontes de ícone | 24 arquivos, 5 formatos | **3 arquivos, 252 KB** |
-
-Aceitação verificada em deploy na raiz **e** em subcaminho: **44 referências locais,
-0 ausentes, 0 absolutas na raiz**. Sonda headless a 320, 360, 390, 768, 1024, 1280,
-1440 e 1920 px: **zero erros de JS**, sem transbordo horizontal
-(`scrollWidth == clientWidth` em toda largura), sem imagem quebrada, GTM confirmado
-carregando e populando o `dataLayer`.
-
-O A/B de screenshot contra a captura original cobre a **página inteira**. Até
-2026-10-24 ele acusava **duas faixas de diferença por largura, de 15 a 19 linhas
-cada** — exatamente os dois textos corrigidos na errata, e nada mais. **Desde
-2026-10-25 isso não vale mais:** a faixa de formato no topo empurra a página inteira
-para baixo e a seção nova entra logo após o hero, então original × site atual difere
-em praticamente todas as linhas e deixou de servir para achar regressão. O controle
-(original × original) continua em 0,000%.
-
-Para conferir regressão agora, compare **o build anterior com o atual**: gere o build
-do commit anterior num diretório à parte, sirva-o na porta 8888 e rode o `shots.py`
-com ele como `ORIG`. Aí qualquer faixa de diferença fora do que se mexeu é regressão
-de verdade.
-
-**Cuidado com a altura de `SIZES` em `shots.py`.** Até 2026-09-19 ela era 3000 px e
-o A/B comparava só o topo — isso só apareceu quando a correção do CRM, a 6096 px, não
-surgiu no diff. Em 2026-10-25 a home tem **7363 px a 1440, 9058 px a 768 e 10178 px
-a 500**, e `SIZES` foi para 7800 / 9600 / 10800. Se o conteúdo crescer, meça de novo
-e suba os valores.
-
-Os únicos hosts externos que a página contata são `www.googletagmanager.com`,
-`fonts.googleapis.com` e `fonts.gstatic.com`. Os links de saída vão para `wa.me`,
+A página não carrega biblioteca nenhuma nem fonte web: o texto usa a fonte do
+sistema. Os únicos hosts externos que ela contata são os do Google Tag Manager e das
+tags que o contêiner dispara. Os links de saída vão para `wa.me`,
 `www.instagram.com` e `www.google.com`.
 
-**O original intocado está arquivado fora do repositório** em
-`../drronaldo-simply-static-original-20260909.tar.gz` (3340 arquivos).
-Restaure de lá, não do git — a migração é anterior ao primeiro commit.
+### Desenho
 
-`MIGRAR-WORDPRESS-PARA-GITHUB-PAGES.txt` (pt-BR, passos 0–10) é o procedimento
-genérico; a cópia canônica vive fora de qualquer repositório, em `../`. Projetos
-irmãos em `../` (`mundoquali`, `camargos`, `santanamoveis`, `ycon`, `2rsseguros`,
-`jcontabilidade`, `kharina`, `sapeca`, `business`) são outras execuções do mesmo
-procedimento.
+- Paleta clara; o destaque é o azul-petróleo da marca (`--marca: #244553`).
+- **O verde só aparece nos botões de WhatsApp e na bolha flutuante**: `#117a43`
+  (contraste 5,4:1 com o branco, passa AA). O verde de marca do WhatsApp,
+  `#25D366`, tem 2:1 com texto branco e reprova.
+- Botões: uma linha só (`white-space: nowrap`), altura de 44 px, ícone à esquerda.
+  Conferido até 320 px de largura.
+- Cabeçalho fixo (`position: sticky`) com logo, links de âncora e botão "Agendar".
+  No celular, os links vão para um `<details>` (o menu funciona sem JS). As âncoras
+  descontam o cabeçalho com `scroll-margin-top: calc(var(--topo) + 12px)`, e a
+  rolagem suave respeita `prefers-reduced-motion`.
+- **O desenho do logo horizontal ocupa só de y=15 a y=83 da caixa de 100 do SVG.**
+  Para ele aparecer grande sem mexer no arquivo, a imagem cresce e uma margem
+  negativa devolve o vazio de cima e de baixo (`.topo__logo img` no CSS). Se trocar o
+  logo, refaça essa conta.
 
-### `tools/` — a migração é reproduzível
+## `tools/` — o build e as conferências
 
-Os scripts de build foram **mantidos**, em `tools/` (gitignored, então nunca são
-publicados):
+Tudo em `tools/` é **gitignored**: nunca é publicado e **não está no git**. As fontes
+do site vivem aqui, então um clone novo do repositório não consegue regenerar a
+página. Faça backup desta pasta.
 
 | arquivo | o que faz |
 |---|---|
-| `build.py` | a migração inteira: poda → renomeia → reescreve caminhos → tira resíduo → conserta defeitos |
-| `refgraph.py` | grafo transitivo de referências a partir das páginas de entrada |
+| `src/pagina.html` | o template da página, com campos `{{...}}` que o build preenche |
+| `src/site.css` | a folha de estilo |
+| `src/site.js` | o JS do menu |
+| `build.py` | copia as imagens da captura, extrai dela o que precisa ficar igual, preenche o template e confere tudo |
 | `verify.py` | resolve toda referência local; falha em qualquer absoluta na raiz ou ausente |
-| `probe.py` | headless: GTM disparando, erros de JS, transbordo, imagens quebradas, em 8 larguras |
-| `shots.py` | screenshot original × migrado, com **controle** original × original |
+| `probe.py` | headless: GTM carregando, erros de JS, transbordo, imagens quebradas, em 8 larguras |
+| `compara.py` | compara dois `index.html` e falha se a medição puder ter mudado (ver abaixo) |
+| `conversoes.js` | clica em cada botão de WhatsApp com o GTM real e registra o que as tags enviariam |
+| `capturas.js` | Playwright: página inteira antes × depois em 375, 768 e 1280 px |
+| `shots.py`, `refgraph.py` | da migração; o A/B do `shots.py` contra a captura do Divi não serve mais |
 
-Para refazer tudo a partir do original arquivado:
+**O que o `build.py` tira da captura do WordPress** (e só isso):
+
+- as imagens;
+- **o par de snippets do GTM, byte a byte**;
+- **o texto dos 5 depoimentos**, depois da `ERRATA` (sai só o `<span>` vazio que
+  embrulhava o parágrafo; os `<br>` do depoimento da Josilene ficam);
+- os links do Instagram e do mapa.
+
+Todo o resto é do template.
+
+**O build falha** em qualquer uma destas situações:
+- o número de links `wa.me` for diferente de 6;
+- algum deles estiver sem `data-formato`, `data-origem` ou o texto "Vim pelo site do
+  Dr. Ronaldo";
+- `wa.me` aparecer fora desses links;
+- algum `href="#…"` apontar para um id inexistente, ou sumir algum dos ids
+  `agendar`, `consulta-online`, `agendar-contato` e `contato`;
+- sobrar `_blank` sem `noopener`, `et_pb` ou `wp-content`;
+- houver mais de 2 `<script>` (o GTM e o `site.js`).
+
+Para regenerar a partir do original arquivado:
 
 ```bash
 mkdir -p /tmp/ronaldo && tar -xzf ../drronaldo-simply-static-original-20260909.tar.gz -C /tmp/ronaldo
@@ -127,113 +143,133 @@ python3 tools/verify.py .
 ```
 
 `build.py` é **idempotente e destrutivo com `assets/`**: apaga a árvore inteira e a
-reescreve a partir da captura, para que um arquivo de um build anterior nunca
-sobreviva a uma mudança no mapa `ASSETS`. `index.html` é regravado por completo. Toda
-transformação é protegida por `assert` com contagem esperada — se a captura mudar e
-um padrão deixar de casar, o build para em vez de publicar um site meio migrado.
+reescreve, para que um arquivo de um build anterior nunca sobreviva.
 
-Para conferir depois de mexer:
+**Antes de publicar qualquer mudança**, guarde o `index.html` anterior e rode:
 
 ```bash
+cp index.html /tmp/index_antes.html          # antes de mexer
+# ... edita tools/src, roda o build ...
+python3 tools/compara.py /tmp/index_antes.html index.html
 python3 -m http.server 8777 --bind 127.0.0.1 &
-python3 -m http.server 8888 --bind 127.0.0.1 -d /tmp/ronaldo/simply-static-ronaldo &
 BASE=http://127.0.0.1:8777 python3 tools/probe.py .
-python3 tools/shots.py /tmp/shots
 ```
 
-`probe.py` prefere o `chrome-headless-shell` do cache do Playwright, se existir: o
-Chrome comum em headless **não desce abaixo de 500 px de largura**, então sem ele a
-faixa de celular não é testada de verdade — os números de 320 e 360 px saem como 500.
+O `compara.py` falha em qualquer uma destas situações:
+- o GTM (head e noscript) não estar idêntico e na mesma posição relativa;
+- mudar algo nos links `wa.me`: quantidade, href exato, `data-formato`, `data-origem`,
+  `target` ou `rel`;
+- um link interno ganhar `wa.me`;
+- sumir um id usado como âncora ou um `href="#"` apontar para o vazio;
+- aparecer gtag, pixel ou script externo novo;
+- perder um metadado do `<head>`;
+- mudar uma letra de depoimento.
 
-## Estrutura
+`conversoes.js` e `capturas.js` precisam do pacote `playwright-core`, que não fica
+instalado (`npm i playwright-core` numa pasta temporária e
+`NODE_PATH=<pasta>/node_modules node tools/conversoes.js`). Os dois usam o Chromium
+do cache do Playwright. Eles esperam o site anterior servido na porta 8779 e o novo
+na 8777. O `conversoes.js` mapeia `drronaldolopes.com.br` para `127.0.0.1`, para que
+acionadores filtrados por domínio também disparem. **Ele aborta todo hit de GA4, Ads
+e DoubleClick antes de sair**: não gera conversão falsa na conta.
 
-```
-index.html          a página inteira
-assets/css/         tema.css (base do tema)  base.css (módulos)  layout.css (a página)
-assets/js/          jquery + 15 scripts do tema, carregados na ordem original
-assets/fonts/       etmodules.woff, fa-solid-900.woff2, fa-brands-400.woff2
-assets/img/         logos SVG, favicons, 2 fotos em 3 tamanhos, aspas, preloader
-CNAME               drronaldolopes.com.br, para o GitHub Pages
-robots.txt          libera tudo, aponta o sitemap
-sitemap.xml         uma URL: a home
-.nojekyll           impede o Jekyll de comer o que começa com _
-NOTICE.txt          atribuição de licença de terceiros (GPL v2, MIT, OFL)
-```
+`probe.py` prefere o `chrome-headless-shell` do cache do Playwright: o Chrome comum em
+headless **não desce abaixo de 500 px de largura**.
 
-A ordem das três folhas no `<head>` **importa** e reproduz a cascata do original:
-`tema.css` → `base.css` → (scripts, ícones) → `layout.css`. Não reordene.
+**O original intocado está arquivado fora do repositório** em
+`../drronaldo-simply-static-original-20260909.tar.gz` (3340 arquivos). É de lá que o
+build lê. Restaure de lá, não do git: a migração é anterior ao primeiro commit.
 
-## O que foi retirado, e por quê
+## Agendamento: online × presencial
 
-- **Três páginas órfãs.** `em-breve/` era a tela antiga de "em breve";
-  `project/` e `author/tiberio/` eram listagens que exibiam só "No Results Found".
-  Nenhuma recebia link de lugar nenhum.
-- **FontAwesome regular.** A página usa quatro glifos: `f232` (WhatsApp, na face
-  *brands*) e `f19d`, `f501`, `f0f0` (na face *solid*). A face *regular* não tem
-  nenhum deles. **As três faces declaram a mesma `font-family: FontAwesome`** e se
-  distinguem só pelo peso, com *brands* declarada por último em `font-weight: 400` —
-  quem mexer nessa parte precisa manter essa ordem, ou o ícone do WhatsApp vira um
-  quadrado vazio. Foi exatamente o que aconteceu num build intermediário.
-- **Formatos de fonte legados** (`eot`, `ttf`, `svg`). Sobrou `woff2` para o
-  FontAwesome e `woff` para o ETmodules, que não tem `woff2` na captura.
-- **Os dois blocos de CSS do Gutenberg** (15 KB embutidos). Definiam só classes
-  `.wp-block-*`, `.has-*` e `.is-layout-*`; **zero** casavam com o DOM da página, que
-  é montada inteiramente com módulos do tema. Da regra toda sobrou `body{padding:0}`,
-  preservado no mesmo ponto da cascata.
-- **Resíduo de servidor**: `pingback`, `xmlrpc`, RSD/EditURI, os dois feeds RSS,
-  `shortlink`, as duas `<meta name="generator">`, `speculationrules` e
-  `X-UA-Compatible`.
-- **Parâmetros herdados do WordPress** dentro do JS embutido: `ajaxurl`,
-  `images_uri`, `builder_images_uri`, `tinymce_uri` (caminhos que não existem mais) e
-  `et_frontend_nonce`, `et_ab_log_nonce` (tokens de sessão que não deviam ir ao ar).
-  Foram esvaziados, não removidos: o script do tema espera as chaves.
-- **Comentários** que citavam o tema, o WordPress ou plugins, incluindo nove
-  anotações `sourceURL` e quatro ponteiros para arquivos `.LICENSE.txt` que a captura
-  nem trouxe. Sobraram só os quatro comentários do Google Tag Manager e os
-  cabeçalhos MIT do jQuery, do jQuery Migrate e do Animate.css, que **precisam ficar**.
-- **O crédito do rodapé** ("Designed by Elegant Themes | Powered by WordPress").
-  Estava dentro de `#main-footer`, que o CSS já escondia com `display:none` — sair
-  não mudou um pixel. A atribuição GPL v2 passou para `NOTICE.txt`.
+Muitos contatos chegavam de outras cidades achando que a consulta seria presencial
+na cidade deles. A página deixa o formato claro antes do clique e faz a pessoa
+escolher.
 
-Os **nomes de classe** (`et_pb_*`, `wp-singular`, `wp-theme-Divi`) **ficaram**: o CSS
-e o JS do tema selecionam por eles. Renomear quebra a página.
+**Só 6 links levam `wa.me`**, em três blocos de dois botões (lado a lado no desktop,
+empilhados e em largura total no celular). Saem de `bloco()` no `build.py`:
 
-## O que foi consertado
+| `data-origem` | onde | âncora |
+|---|---|---|
+| `hero` | primeira dobra | — |
+| `consulta-online` | fim da seção "Como funciona a consulta online" | `#agendar` |
+| `contato` | fim da seção Contato | `#agendar-contato` |
 
-- **Os nove links de WhatsApp** apontavam para `wa.me/+5562981134061`. O `+` vira
-  `%2B` dentro do parâmetro `phone` no redirecionamento do `wa.me`, e o formato
-  documentado é só dígitos. Agora são `wa.me/5562981134061`.
-- **Os doze links do menu** eram `/#secao` — absolutos na raiz, quebrariam num deploy
-  em subcaminho. Agora são `#secao`.
-- **O zoom estava travado** (`maximum-scale=1.0, user-scalable=0`), o que reprova em
-  acessibilidade. O viewport agora é `width=device-width, initial-scale=1`.
-- **Toda imagem vinha com `alt=""`** e as duas fotos carregavam
-  `title="WhatsApp Image 2026-07-22 at 14.53.22"`, que aparecia como tooltip e vazava
-  a origem do arquivo. Ganharam texto alternativo e título de verdade; os arquivos
-  viraram `consultorio-1*.jpeg` e `consultorio-2*.jpeg`.
-- **Faltava `<meta name="description">`.** Foi acrescentada, junto de `preconnect`
-  para o Google Fonts no lugar do `dns-prefetch`.
-- **Faltava `rel="noopener"`** em doze dos treze links `target="_blank"`. Ver a seção
-  de revisão de segurança.
+- **"Agendar consulta online"**, `data-formato="online"`, com a nota "Todo o Brasil ·
+  a partir de 12 anos" logo abaixo.
+- **"Agendar presencial em Goiânia"**, `data-formato="presencial"`, com a nota
+  "Crianças e adolescentes".
+- Todos com `target="_blank" rel="noopener"` e uma mensagem própria, gerada com
+  `urllib.parse.quote(msg, safe='')`. As duas mensagens contêm **"Vim pelo site do
+  Dr. Ronaldo"**: é o que identifica no WhatsApp que o contato veio do site.
+  **O href não pode mudar um byte**; o `compara.py` confere.
+- Abaixo de cada par: "Respondemos de segunda a sexta, das 9h às 17h."
+
+**O resto não abre o WhatsApp**, e nenhum desses links contém `wa.me`, de propósito,
+para não disparar a conversão:
+- o botão "Agendar" do cabeçalho, os "Agendar consulta" do fim de cada seção e a
+  **bolha verde flutuante** (canto inferior direito) rolam até `#agendar`;
+- o telefone do contato rola até `#agendar-contato`.
+
+**A seção `#consulta-online`** fica logo após o hero. **O anúncio da campanha online
+aponta para `drronaldolopes.com.br/#consulta-online`: não renomeie esse id.**
+
+**A faixa do topo** ("Atendimento online para todo o Brasil e brasileiros no
+exterior · Presencial somente em Goiânia") fica no fluxo, acima do cabeçalho, e não
+acompanha a rolagem. Quem fica fixo é o cabeçalho.
+
+A contagem de conversões caiu de patamar a partir de 2026-10-25: há menos links
+`wa.me` e um passo de escolha antes do WhatsApp. Não compare com o período anterior
+como se fosse a mesma métrica.
+
+## Google Tag Manager e conversões
+
+O contêiner é `GTM-PZ346GTV`, com o snippet `<script>` no `<head>` (entre o
+`viewport` e os favicons) e o `<noscript>` no fim do `<body>`, depois de todo o
+conteúdo. **Os dois vêm da captura byte a byte; não mexa neles.** A medição é toda no
+contêiner: não entra gtag, pixel nem código de conversão no HTML.
+
+Testado com o contêiner real em 2026-10-25 (`conversoes.js`), **idêntico no site
+anterior e no redesign**. Cada clique num dos 6 botões gera:
+
+- `gtm.linkClick` no `dataLayer`, com a URL do `wa.me`;
+- GA4 `G-Q9RCCNDZFT`, evento **`clique_whatsapp`**;
+- **conversão do Google Ads**, conta `17636429356`, rótulo `EjhyCLaV4P0cEKyc2tlB`.
+
+A bolha e os botões "Agendar" não disparam nada disso. O acionador é "Click URL
+contém wa.me", e o GTM identifica o botão por **`data-formato` e `data-origem`**.
+As classes do Divi (`et_pb_*`) saíram no redesign.
+
+**O ícone dentro dos botões tem `pointer-events: none`.** Assim, um clique em cima do
+ícone tem como alvo o `<a>`, e não o `<svg>`. Num acionador do tipo "Todos os
+elementos", um clique com alvo no `<svg>` chegaria sem Click URL e a conversão se
+perderia.
+
+## Regras de conteúdo (publicidade médica, CFM)
+
+- Sem adjetivo de superioridade ou exclusividade ("melhor", "referência", "o mais",
+  "renomado", "único").
+- Sem promessa ou garantia de resultado, "cura", antes/depois, sensacionalismo ou
+  urgência artificial.
+- Sem preço, valor ou desconto. Sem depoimento novo nem número de pacientes.
+- **Nome, CRM e RQE ficam visíveis no topo (hero) e no rodapé.**
+- Não invente formação, título ou serviço que não esteja no site.
 
 ### Errata de conteúdo
 
 Erros de digitação que vieram do texto original, corrigidos em 2026-09-19 e
-2026-09-20. Vivem na lista `ERRATA` do `build.py`, **não numa edição solta no
-`index.html`**: o build regrava o arquivo inteiro a cada execução e desfaria qualquer
-conserto feito só na saída. Cada entrada exige exatamente uma ocorrência, senão o
-build falha.
-
-Texto do próprio site:
+2026-09-20. Vivem na lista `ERRATA` do `build.py`, aplicada à captura; cada entrada
+exige exatamente uma ocorrência, senão o build falha. Hoje só os depoimentos saem
+da captura; as três primeiras entradas ficam para a errata seguir conferida.
 
 | era | virou |
 |---|---|
 | `CRM G0 15751` | `CRM GO 15751` — GO de Goiás, estava com zero |
-| `Ansiedadae` | `Ansiedade` — no cartão de especialidades |
-| `infancia e adolescência` | `infância e adolescência` — no cartão de Especialização |
+| `Ansiedadae` | `Ansiedade` |
+| `infancia e adolescência` | `infância e adolescência` |
 
-Depoimentos, corrigidos com o cliente de acordo. São palavras dos pacientes: aqui só
-entra erro de grafia, abreviação e pontuação, e a voz de cada um fica como está.
+Depoimentos, corrigidos de acordo com o cliente. São palavras dos pacientes: aqui
+só entra erro de grafia, abreviação e pontuação, e a voz de cada um fica como está.
 **Não reescreva depoimento além disso.**
 
 | era | virou |
@@ -244,74 +280,12 @@ entra erro de grafia, abreviação e pontuação, e a voz de cada um fica como e
 | `Dr gostaria de expressar` | `Dr., gostaria de expressar` — vocativo |
 | `hipomania , mas` | `hipomania, mas` — espaço antes da vírgula |
 
-## Agendamento: online × presencial — 2026-10-25
-
-Muitos contatos chegavam de outras cidades achando que a consulta seria presencial
-na cidade deles, e muitos abriam conversa sem intenção real. Desde 2026-10-25 a
-página deixa o formato claro antes do clique e faz a pessoa escolher. Tudo sai da
-etapa do WhatsApp no `build.py` (`FORMATOS`, `bloco()`, `PASSOS`, `FAIXA`).
-
-**Só 6 links levam `wa.me`**, em três blocos de dois botões, lado a lado no desktop e
-empilhados no celular:
-
-| bloco | onde | classe de instância | âncora |
-|---|---|---|---|
-| hero | no lugar do antigo "Marcar consulta" | `et_pb_button_0` | — |
-| consulta-online | fim da seção nova | nenhuma | `#agendar` |
-| contato | no lugar do antigo "Vamos conversar" | `et_pb_button_5` | `#agendar-contato` |
-
-- **Consulta online** — "Todo o Brasil · a partir de 12 anos" —
-  `data-formato="online"`.
-- **Consulta presencial em Goiânia** — "Crianças e adolescentes" —
-  `data-formato="presencial"`.
-- Cada link leva também `data-origem` (`hero`, `consulta-online`, `contato`),
-  `target="_blank" rel="noopener"` e uma mensagem própria, gerada com
-  `urllib.parse.quote`. As duas mensagens contêm **"Vim pelo site do Dr. Ronaldo"**: é
-  o que identifica no WhatsApp que o contato veio do site. Não tire.
-- Abaixo de cada bloco: "Respondemos de segunda a sexta, das 9h às 17h."
-
-**O resto não abre o WhatsApp.** Os botões do meio da página (`et_pb_button_1` a `_4`,
-com os textos originais) e a bolha verde flutuante (`et_pb_icon_0`) rolam até
-`#agendar`. O telefone do contato (`et_pb_blurb_3`) rola até `#agendar-contato`, o
-bloco logo abaixo dele. Nenhum desses contém `wa.me`, de propósito: assim não
-disparam a conversão.
-
-**A seção `#consulta-online`** ("Como funciona a consulta online", quatro passos)
-fica logo após o hero. O anúncio da campanha online aponta para
-`drronaldolopes.com.br/#consulta-online`: **não renomeie esse id.**
-
-**A faixa do topo** ("Atendimento online para todo o Brasil e brasileiros no
-exterior · Presencial somente em Goiânia") é `position: sticky`, e não `fixed`. O
-cabeçalho do site rola com a página, então a faixa ocupa espaço próprio no fluxo e
-não cobre nada no carregamento. No celular ela quebra em duas linhas (45 px); no
-desktop tem uma (33 px).
-
-**O tema não sabe da faixa** ao rolar até uma âncora: `et_pb_smooth_scroll` só
-desconta o cabeçalho fixo do Divi, que este site não usa. Por isso `#agendar` tem
-`padding-top:60px; margin-top:-48px`. O visual não muda, e a rolagem para com os
-botões abaixo da faixa. As seções do tema já têm respiro de sobra no topo.
-`#agendar-contato` não precisa disso: fica no fim da página, que nunca rola o
-bastante para levá-lo ao topo.
-
-**O `build.py` falha** se houver um número de links `wa.me` diferente de 6, se algum
-estiver sem `data-formato` ou sem "Vim pelo site do Dr. Ronaldo", ou se algum
-`href="#…"` apontar para um id que não existe.
-
-**Regras de conteúdo (publicidade médica, CFM):** nada de adjetivo de superioridade
-("melhor", "referência", "renomado"), promessa de resultado, depoimento novo nem
-preço de consulta.
-
-A contagem de conversões caiu de patamar a partir de 2026-10-25: há menos links
-`wa.me` e um passo de escolha antes do WhatsApp. Não compare com o período anterior
-como se fosse a mesma métrica.
-
 ## Dados EXIF
 
 Conferido em 2026-09-09: **não há metadado nenhum a remover.** Os seis JPEG têm só o
-marcador JFIF (`FFE0`), sem EXIF, XMP nem IPTC — o WhatsApp descarta na origem e o
-WordPress reprocessou. Os quatro PNG não têm nenhum chunk de texto. O GIF não tem
-extensão de comentário. Os dois SVG têm `<title>` com o nome e a especialidade do
-médico, que é conteúdo de acessibilidade da própria marca e **deve ficar**.
+marcador JFIF (`FFE0`), sem EXIF, XMP nem IPTC. Os PNG não têm chunk de texto. Os
+dois SVG têm `<title>` com o nome e a especialidade do médico, que é conteúdo de
+acessibilidade da própria marca e **deve ficar**.
 
 ## Ponto frágil conhecido
 
@@ -320,72 +294,22 @@ que carrega os tokens `sa=X` e `ved=` de uma sessão de busca. Responde 200 hoje
 tokens desse tipo não são estáveis. A troca natural é
 `https://www.google.com/maps?cid=14915821240747628550` (o `cid` decimal sai do `fid`
 hexadecimal `0xceffa4641bfd1806` que já está na URL atual), **mas isso não foi
-confirmado**: o Google não entrega o conteúdo do lugar sem JavaScript e bloqueia o
-headless, então ninguém verificou que esse `cid` cai na ficha certa. Abra no
-navegador antes de trocar.
+confirmado**: o Google bloqueia o headless. Abra no navegador antes de trocar.
 
-## Revisão de segurança — 2026-09-09
+## Segurança
 
-Nada grave. O site é estático, não tem `<form>`, `<input>`, cookie próprio,
-`localStorage` nem qualquer estado de servidor. A superfície é o que a página carrega
-de terceiros e para onde ela aponta.
-
-**Corrigido nesta revisão.** Doze dos treze links externos usavam `target="_blank"`
-sem `rel="noopener"`, o que entrega `window.opener` à página de destino e permite que
-ela reescreva a aba de origem (*reverse tabnabbing*). Os navegadores atuais já aplicam
-`noopener` sozinhos em `_blank`, então o risco prático era baixo, mas os antigos não.
-`build.py` agora acrescenta o `rel` e **falha o build** se sobrar algum `_blank` sem
-ele. Um link já vinha com `noopener noreferrer` do próprio tema.
-
-**Conferido e limpo:**
-
-- **Nenhum segredo.** Varredura por chaves de API, tokens, chaves privadas e strings
-  de conexão não achou nada. Os `#wp-admin-bar-*` que aparecem em `tema.css` são só
-  seletores CSS órfãos, inertes.
-- **Nenhum token de sessão.** `et_frontend_nonce` e `et_ab_log_nonce` vieram
-  preenchidos da captura e foram esvaziados na migração; nenhum hexadecimal solto
-  sobrou no HTML.
-- **Sem XSS.** Os dois `new Function("return this")` são o polyfill de `globalThis`
-  do webpack, sem entrada externa. As três leituras de `location.hash` são
-  sanitizadas antes do uso, com `replace(/[^a-zA-Z0-9-_|#]/g,"")` — o conjunto
-  permitido não forma HTML, então não há injeção via seletor do jQuery. O
-  `innerHTML` de `multi-view.js` recebe o JSON estático `diviElementMultiViewData`
-  que está embutido na própria página.
-- **Bibliotecas autênticas.** `jquery.min.js` é byte a byte igual ao 3.7.1 oficial do
-  `code.jquery.com` nos 87533 bytes, com `jQuery.noConflict();` acrescentado ao final
-  — comportamento padrão do WordPress, e o tema depende dele. `jquery-migrate.min.js`
-  é idêntico ao 3.4.1 oficial, sem uma diferença sequer.
-- **Sem arquivo indevido no commit**: nenhum `.DS_Store`, `.env`, dump, `.tar.gz` ou
-  artefato de sonda; nenhum executável fora de `tools/`, que é gitignored.
+O site é estático e não tem `<form>`, `<input>`, cookie próprio, `localStorage` nem
+estado de servidor. Desde o redesign não publica biblioteca de terceiros: o único JS
+próprio é o `site.js`, que não lê entrada nenhuma. Todo link `target="_blank"` leva
+`rel="noopener"`, e o build falha se faltar.
 
 **Aceito, com consciência do que é:**
 
 - **O Google Tag Manager pode injetar JavaScript arbitrário, por definição.** Quem
-  tiver acesso ao contêiner `GTM-PZ346GTV` controla o que roda na página. Isso é a
-  natureza da ferramenta, não um defeito da migração, mas o acesso a esse contêiner
+  tiver acesso ao contêiner `GTM-PZ346GTV` controla o que roda na página; esse acesso
   merece o mesmo cuidado do acesso ao repositório.
 - **Não há Content-Security-Policy.** O GitHub Pages não deixa definir cabeçalho
-  HTTP, e um CSP em `<meta>` que ainda permitisse o GTM precisaria de
-  `unsafe-inline` mais injeção dinâmica de script — ou seja, quase nenhuma proteção
-  em troca de um risco real de quebrar a medição. Não vale.
+  HTTP, e um CSP em `<meta>` que ainda permitisse o GTM daria quase nenhuma proteção
+  em troca de um risco real de quebrar a medição.
 - **Os dados pessoais da página são públicos de propósito**: telefone profissional,
-  Instagram, endereço do consultório e os RQE 20033 e 20034. É a informação de
-  contato de um consultório médico.
-
-
-## Google Tag Manager
-
-O contêiner é `GTM-PZ346GTV`, com o par snippet no `<head>` e `<noscript>` no início
-do `<body>`. `probe.py` confere em toda largura que `window.google_tag_manager`
-existe, que a chave do contêiner aparece nele e que o `dataLayer` recebeu o evento
-`gtm.js`. **Não mexa nesses dois blocos sem rodar a sonda depois.**
-
-**A medição é toda no contêiner**; não entra gtag, pixel nem código de conversão no
-HTML. O acionador de conversão é **"Click URL contém wa.me"**. Uma variável do
-contêiner identifica a origem do clique pelas classes de instância do tema
-(`et_pb_button_0`…`_5`, `et_pb_icon_0`, `et_pb_blurb_3`), por isso **essas classes
-ficam**. O bloco de `#consulta-online` não tem classe de instância, e para ele essa
-variável sai vazia: o caminho robusto é ler os atributos `data-origem` e
-`data-formato` com variáveis de *Atributo de dados*. Os `<span>` dentro dos botões
-têm `pointer-events:none`, para que o elemento clicado seja sempre o `<a>`, mesmo
-num acionador do tipo "Todos os elementos".
+  Instagram, endereço do consultório, CRM e RQE.
