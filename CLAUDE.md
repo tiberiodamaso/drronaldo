@@ -24,30 +24,34 @@ some no próximo build.
 Todos os caminhos são relativos, então o site funciona na raiz de um domínio *e* sob
 um subcaminho (`user.github.io/repo/`). `.nojekyll` está commitado.
 
-## Domínio e virada de DNS
+## Domínio e DNS — virada CONCLUÍDA
 
-O site vai para **`drronaldolopes.com.br`**, registrado para RLS PSIQUIATRIA GERAL E
-DA INFANCIA E ADOLESCENCIA, ativo até 2028-07-21. `CNAME`, `sitemap.xml`,
-`robots.txt` e o `<link rel="canonical">` já carregam esse domínio; todos saem do
-`build.py`, da constante `CANONICO`.
+O site está no ar em **`drronaldolopes.com.br`**, servido pelo GitHub Pages. O
+domínio está registrado para RLS PSIQUIATRIA GERAL E DA INFANCIA E ADOLESCENCIA,
+ativo até 2028-07-21. `CNAME`, `sitemap.xml`, `robots.txt` e o
+`<link rel="canonical">` carregam esse domínio; todos saem do `build.py`, da
+constante `CANONICO`.
 
-**Em 2026-09-09 o domínio ainda apontava para o WordPress em produção**, no A
-`157.230.185.95` (DigitalOcean), servindo HTTPS com o mesmo título, o mesmo contêiner
-`GTM-PZ346GTV` e o mesmo `wa.me/+55...` quebrado da captura — ou seja, a migração
-partiu do que estava mesmo no ar. `www.drronaldolopes.com.br` não tinha registro
-nenhum.
+**O WordPress antigo foi desativado.** Ele rodava no A `157.230.185.95`
+(DigitalOcean), e a migração partiu do que estava mesmo no ar ali em 2026-09-09:
+mesmo título, mesmo contêiner `GTM-PZ346GTV` e o mesmo `wa.me/+55...` quebrado da
+captura. Nenhum registro aponta mais para aquele IP. A cópia que sobrou dele é o
+arquivo da captura em `../` (ver abaixo).
 
-Para virar, os registros do ápice precisam sair daquele IP e ir para os quatro
-endereços do GitHub Pages:
+Estado conferido em 2026-10-25:
 
-```
-185.199.108.153   185.199.109.153   185.199.110.153   185.199.111.153
-```
+- o ápice tem os quatro A do GitHub Pages:
+  ```
+  185.199.108.153   185.199.109.153   185.199.110.153   185.199.111.153
+  ```
+- `www` é CNAME para `tiberiodamaso.github.io` e redireciona (301) para o ápice;
+- **HTTPS forçado**: `http://` responde 301 para `https://`, e o certificado está
+  válido;
+- o que responde no domínio é este repositório (`server: GitHub.com`), já com a
+  faixa de formato de 2026-10-25.
 
-e `www` vira um CNAME para `<usuario>.github.io`. Só depois disso habilite o
-*Enforce HTTPS* nas configurações do Pages — o certificado só é emitido com o DNS já
-apontado. Enquanto o DNS não virar, o que responde no domínio continua sendo o
-WordPress antigo.
+Publicar é fazer push em `main`: o Pages serve a raiz do branch em um ou dois
+minutos.
 
 ## Estado da migração — CONCLUÍDA
 

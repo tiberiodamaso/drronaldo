@@ -8,3 +8,4 @@ __pycache__/
 # Artefatos das sondas headless, escritos ao lado do index.html
 _probe.html
 _t.html
+CLAUDE.md
