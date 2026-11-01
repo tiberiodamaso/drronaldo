@@ -41,13 +41,13 @@ a:hover{color:var(--marca-escura)}
 
 /* cabecalho */
 .topo{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);border-bottom:1px solid var(--linha);-webkit-backdrop-filter:saturate(1.4) blur(6px);backdrop-filter:saturate(1.4) blur(6px)}
-.topo__barra{max-width:1120px;margin:0 auto;padding:0 20px;height:var(--topo);display:flex;align-items:center;gap:20px}
+.topo__barra{max-width:1200px;margin:0 auto;padding:0 20px;height:var(--topo);display:flex;align-items:center;gap:20px}
 .topo__logo{flex:0 0 auto;margin-right:auto}
 /* o desenho do logo ocupa so de y=15 a y=83 da caixa de 100 do SVG: a imagem cresce e
    a margem negativa devolve o vazio de cima e de baixo, sem mexer no arquivo */
 .topo__logo img{height:96px;width:auto;margin:-14px 0 -16px}
 .topo__nav{display:flex;gap:22px}
-.topo__nav a,.topo__menu nav a{color:var(--texto);text-decoration:none;font-size:.95rem;font-weight:500}
+.topo__nav a,.topo__menu nav a{color:var(--texto);text-decoration:none;font-size:.95rem;font-weight:500;white-space:nowrap}
 .topo__nav a:hover,.topo__menu nav a:hover{color:var(--marca);text-decoration:underline}
 .topo__menu{display:none;position:relative}
 .topo__menu summary{list-style:none;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--linha);border-radius:var(--raio);color:var(--marca)}
@@ -56,8 +56,10 @@ a:hover{color:var(--marca-escura)}
 .topo__menu summary::-webkit-details-marker{display:none}
 .topo__menu nav{position:absolute;right:0;top:calc(100% + 8px);min-width:220px;padding:8px;background:#fff;border:1px solid var(--linha);border-radius:var(--raio);box-shadow:0 8px 24px rgba(20,40,50,.08)}
 .topo__menu nav a{display:block;padding:10px 12px;border-radius:6px}
-@media (max-width:959px){.topo__nav{display:none}.topo__menu{display:block}}
-@media (max-width:959px){:root{--topo:72px}.topo__logo img{height:72px;margin:-11px 0 -12px}}
+/* o cabecalho inteiro (logo + 7 itens + Agendar) precisa de ~1175px: abaixo de 1200,
+   os links vao para o menu de tres linhas, senao a pagina rola de lado */
+@media (max-width:1199px){.topo__nav{display:none}.topo__menu{display:block}}
+@media (max-width:1199px){:root{--topo:72px}.topo__logo img{height:72px;margin:-11px 0 -12px}}
 @media (max-width:420px){.topo__barra{gap:8px;padding:0 12px}.topo__logo img{height:64px;margin:-10px 0 -11px}}
 @media (max-width:359px){.topo__logo img{height:50px;margin:-7px 0 -8px}}
 
@@ -168,3 +170,17 @@ a:hover{color:var(--marca-escura)}
   .rodape{padding-bottom:96px}
   .rodape__grade{flex-direction:column;gap:20px;text-align:center}
 }
+
+/* paginas de assunto (consulta-online/, tdah-adulto/, autismo-adulto/): topo com o
+   h1 e o primeiro botao, texto corrido em uma coluna estreita, aviso de urgencia */
+.secao.pagina-topo{padding:56px 0 64px}
+@media (max-width:599px){.secao.pagina-topo{padding:36px 0 48px}}
+.texto h2{margin-top:1.8em}
+.texto h2:first-child{margin-top:0}
+.texto ul{margin:0 0 1em;padding-left:1.25em}
+.texto li{margin-bottom:.35em}
+.texto .passos{margin-bottom:1.2em}
+.aviso{margin:40px 0 0;padding-top:16px;border-top:1px solid var(--linha);font-size:.85rem;color:var(--suave)}
+
+/* links discretos da pagina inicial para as paginas de assunto */
+.relacionados{margin:20px 0 0;font-size:.9rem;color:var(--suave)}
