@@ -184,3 +184,4 @@ a:hover{color:var(--marca-escura)}
 
 /* links discretos da pagina inicial para as paginas de assunto */
 .relacionados{margin:20px 0 0;font-size:.9rem;color:var(--suave)}
+.texto h3{margin:1.4em 0 .3em}

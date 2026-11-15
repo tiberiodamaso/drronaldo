@@ -42,6 +42,8 @@ dois minutos.
 | 2026-10-25 | **Redesign**: o Divi saiu; HTML semântico, CSS e JS próprios |
 | 2026-10-28 | Rótulos "Consulta particular online/presencial", segunda linha da faixa, negritos (à mão no `index.html`) |
 | 2026-11-01 | **Páginas de assunto** `/consulta-online/`, `/tdah-adulto/`, `/autismo-adulto/`; item "Consulta online" no menu; menu em linha só a partir de 1200 px |
+| 2026-11-15 | O build deixa de ler a captura do WordPress: imagens, GTM, depoimentos e links passam para `tools/src/` |
+| 2026-11-15 | Mensagens do WhatsApp com triagem (nome, idade, cidade); presencial de segunda a sexta; página `/psiquiatra-infantil-goiania/` pronta, **não publicada** (`PUBLICAR_INFANTIL = False`) |
 
 ## Domínio e DNS — virada CONCLUÍDA
 
@@ -71,13 +73,14 @@ index.html          a página inicial (gerada)
 consulta-online/    página de assunto: consulta psiquiátrica online (index.html, gerada)
 tdah-adulto/        página de assunto: TDAH em adultos (index.html, gerada)
 autismo-adulto/     página de assunto: autismo em adultos (index.html, gerada)
+psiquiatra-infantil-goiania/  página infantojuvenil presencial; NÃO publicada (noindex)
 assets/css/site.css a folha única do site (gerada a partir de tools/src/site.css)
 assets/js/site.js   7 linhas: fecha o menu do celular após escolher uma seção
 assets/img/         logo horizontal, logo vertical branco, 3 favicons,
                     2 fotos (consultorio-1, consultorio-2) em 3 tamanhos cada
 CNAME               drronaldolopes.com.br, para o GitHub Pages
 robots.txt          libera tudo, aponta o sitemap
-sitemap.xml         as 4 páginas (gerado da lista PAGINAS do build.py)
+sitemap.xml         as páginas publicadas (gerado da lista PAGINAS do build.py)
 .nojekyll           impede o Jekyll de comer o que começa com _
 NOTICE.txt          licenças de terceiros (hoje, só o ícone do WhatsApp, CC0)
 ```
@@ -111,8 +114,9 @@ tags que o contêiner dispara. Os links de saída vão para `wa.me`,
 ## `tools/` — o build e as conferências
 
 Tudo em `tools/` é **gitignored**: nunca é publicado e **não está no git**. As fontes
-do site vivem aqui, então um clone novo do repositório não consegue regenerar a
-página. Faça backup desta pasta.
+do site vivem aqui, e desde 2026-11-15 **só aqui**: o build não depende de mais nada.
+Um clone novo do repositório não consegue regenerar a página. **Faça backup desta
+pasta.**
 
 | arquivo | o que faz |
 |---|---|
@@ -121,7 +125,10 @@ página. Faça backup desta pasta.
 | `src/consulta-online.html`, `src/tdah-adulto.html`, `src/autismo-adulto.html` | o `<main>` de cada página de assunto |
 | `src/site.css` | a folha de estilo |
 | `src/site.js` | o JS do menu |
-| `build.py` | copia as imagens da captura, extrai dela o que precisa ficar igual, preenche o template e confere tudo |
+| `src/img/` | as 11 imagens do site (logos, favicons, 2 fotos em 3 tamanhos); o build copia todas para `assets/img/` |
+| `src/gtm-head.html`, `src/gtm-noscript.html` | o par do Google Tag Manager, byte a byte como estava no WordPress |
+| `src/depoimentos.json` | os 5 depoimentos (texto e autor), já com a errata aplicada |
+| `build.py` | copia as imagens, preenche o molde de cada página e confere tudo |
 | `verify.py` | resolve toda referência local; falha em qualquer absoluta na raiz ou ausente |
 | `probe.py` | headless, em todas as páginas e 9 larguras (320 a 1920, incluindo 1100): GTM carregando, erros de JS, transbordo, imagens quebradas |
 | `compara.py` | compara dois `index.html` e falha se a medição puder ter mudado (ver abaixo) |
@@ -130,15 +137,18 @@ página. Faça backup desta pasta.
 | `capturas.js` | Playwright: página inteira antes × depois em 375, 768 e 1280 px |
 | `shots.py`, `refgraph.py` | da migração; o A/B do `shots.py` contra a captura do Divi não serve mais |
 
-**O que o `build.py` tira da captura do WordPress** (e só isso):
+**O que veio do site WordPress original** e precisa continuar igual foi extraído da
+captura uma vez, em 2026-11-15, e vive em `tools/src/`:
 
-- as imagens;
-- **o par de snippets do GTM, byte a byte**;
-- **o texto dos 5 depoimentos**, depois da `ERRATA` (sai só o `<span>` vazio que
-  embrulhava o parágrafo; os `<br>` do depoimento da Josilene ficam);
-- os links do Instagram e do mapa.
+- as imagens (`src/img/`);
+- **o par de snippets do GTM, byte a byte** (`src/gtm-*.html`);
+- **o texto dos 5 depoimentos** (`src/depoimentos.json`), com a errata aplicada. Do
+  HTML do tema saiu só o `<span>` vazio que embrulhava o parágrafo; os `<br>` do
+  depoimento da Josilene ficam;
+- os links do Instagram e do mapa (constantes `INSTAGRAM` e `MAPA` no `build.py`).
 
-Todo o resto é do template.
+Na extração, o site gerado saiu idêntico, arquivo por arquivo, ao gerado a partir da
+captura. Todo o resto é do molde.
 
 **O build falha** em qualquer uma destas situações:
 - a página inicial tiver um número de links `wa.me` diferente de 6, ou sumir algum
@@ -156,16 +166,19 @@ Todo o resto é do template.
 - sobrar `_blank` sem `noopener`, `et_pb` ou `wp-content`;
 - houver mais de 2 `<script>` numa página (o GTM e o `site.js`).
 
-Para regenerar a partir do original arquivado:
+Para regenerar o site:
 
 ```bash
-mkdir -p /tmp/ronaldo && tar -xzf ../drronaldo-simply-static-original-20260909.tar.gz -C /tmp/ronaldo
-SRC=/tmp/ronaldo/simply-static-ronaldo DEST=. python3 tools/build.py
+DEST=. python3 tools/build.py
 python3 tools/verify.py .
 ```
 
 `build.py` é **idempotente e destrutivo com `assets/`**: apaga a árvore inteira e a
-reescreve, para que um arquivo de um build anterior nunca sobreviva.
+reescreve, para que um arquivo de um build anterior nunca sobreviva. **Arquivo solto
+em `assets/` que não venha de `tools/src/` some no build.** Em 2026-11-15 havia lá
+um retrato do médico fora do git (`assets/img/WhatsApp Image 2026-09-21 at
+16.22.20.jpeg`), ainda sem uso: copie-o para fora antes do build e devolva depois,
+ou guarde-o fora de `assets/`.
 
 **Antes de publicar qualquer mudança**, guarde o `index.html` anterior e rode:
 
@@ -198,9 +211,11 @@ e DoubleClick antes de sair**: não gera conversão falsa na conta.
 `probe.py` prefere o `chrome-headless-shell` do cache do Playwright: o Chrome comum em
 headless **não desce abaixo de 500 px de largura**.
 
-**O original intocado está arquivado fora do repositório** em
-`../drronaldo-simply-static-original-20260909.tar.gz` (3340 arquivos). É de lá que o
-build lê. Restaure de lá, não do git: a migração é anterior ao primeiro commit.
+**A captura original do WordPress** (`drronaldo-simply-static-original-20260909.tar.gz`,
+3340 arquivos, 41 MB) não é mais usada pelo build. Em 2026-11-15 ela foi para a
+Lixeira do Mac, saindo de `../clients-static/`. Se precisar de algo do site antigo
+que não esteja em `tools/src/`, procure lá ou num backup. Não está no git: a migração
+é anterior ao primeiro commit.
 
 ## Agendamento: online × presencial
 
@@ -222,11 +237,18 @@ a lado no desktop, empilhados e em largura total no celular). Saem de `bloco()` 
   Brasil · a partir de 12 anos" logo abaixo.
 - **"Consulta particular presencial"**, `data-formato="presencial"`, com a nota
   "Crianças e adolescentes".
-- Todos com `target="_blank" rel="noopener"` e uma mensagem própria, gerada com
-  `urllib.parse.quote(msg, safe='')`. As duas mensagens contêm **"Vim pelo site do
-  Dr. Ronaldo"**: é o que identifica no WhatsApp que o contato veio do site.
-  **O href não pode mudar um byte**; o `compara.py` confere.
+- Todos com `target="_blank" rel="noopener"`. As mensagens saem de duas constantes
+  do `build.py`, `MSG_WHATSAPP_ONLINE` e `MSG_WHATSAPP_PRESENCIAL`, codificadas com
+  `urllib.parse.quote(msg, safe='')`. Desde 2026-11-15 elas pedem nome do paciente,
+  idade e cidade, para a triagem chegar pronta à secretária. As duas contêm **"Vim
+  pelo site do Dr. Ronaldo"**: é o que a secretária usa para registrar a origem do
+  contato. O GTM não lê o texto da mensagem (conferido no `gtm.js`), então ela pode
+  mudar; número, classes e atributos, não. Fora de uma troca deliberada da
+  mensagem, **o href não muda um byte**, e o `compara.py` confere.
 - Abaixo de cada par: "Respondemos de segunda a sexta, das 9h às 17h."
+  (`HORARIO_WHATSAPP`). Os dias do presencial ficam em `DIAS_PRESENCIAL` ("segunda a
+  sexta"); `HORARIO_PRESENCIAL` é `None` porque o site não publica horário do
+  presencial: a secretária informa. Nenhum trecho do site dizia "só às terças".
 
 **O resto não abre o WhatsApp**, e nenhum desses links contém `wa.me`, de propósito,
 para não disparar a conversão:
@@ -272,6 +294,27 @@ saem da lista `PAGINAS` do `build.py` (função `assunto()`):
 - A conversão das páginas novas entra na **mesma** ação do Ads da inicial. Separar
   por página no Ads exige mexer no GTM (por exemplo, ler `data-origem`).
 
+### Página infantojuvenil: `/psiquiatra-infantil-goiania/` (não publicada)
+
+Pronta para quando a campanha migrar para o presencial infantil. **Publicar é trocar
+`PUBLICAR_INFANTIL = False` para `True` no `build.py` e rodar o build.**
+
+- **Com `False`** (estado atual): `noindex, nofollow`, fora do sitemap e do menu, e
+  nenhuma página aponta para ela. O build falha se algum link escapar. A página
+  continua acessível pela URL, para revisão.
+- **Com `True`**: sai o `noindex`, ela entra no sitemap e ganha dois links de
+  entrada. Um vai na inicial, logo abaixo do bloco do contato (`LINK_INFANTIL`); o
+  outro substitui o texto da seção "Crianças" de `/consulta-online/` (`CRIANCAS`). O
+  build falha se a página publicada ficar sem link de entrada. Para ver a versão
+  publicada sem mexer no arquivo:
+  `PUBLICAR_INFANTIL=1 DEST=<pasta temporária> python3 tools/build.py`.
+- Só o botão **presencial**, duas vezes, com `data-origem="pagina-psiquiatra-infantil-goiania"`
+  (regra: `pagina-` + endereço). `<h1>` "Psiquiatra Infantil em Goiânia".
+- Crianças **a partir de 3 anos** e adolescentes, no presencial; online só a partir de
+  12 anos. O texto não fala de reembolso (o site não fala disso), duração, valor,
+  número de sessões nem medicamento.
+- Ao publicar, atualize o `lastmod` da página na lista `PAGINAS`.
+
 **A faixa do topo** ("Atendimento online para todo o Brasil e brasileiros no
 exterior · Presencial somente em Goiânia") fica no fluxo, acima do cabeçalho, e não
 acompanha a rolagem. Quem fica fixo é o cabeçalho.
@@ -284,7 +327,7 @@ como se fosse a mesma métrica.
 
 O contêiner é `GTM-PZ346GTV`, com o snippet `<script>` no `<head>` (entre o
 `viewport` e os favicons) e o `<noscript>` no fim do `<body>`, depois de todo o
-conteúdo. **Os dois vêm da captura byte a byte; não mexa neles.** A medição é toda no
+conteúdo. **Os dois vêm do WordPress byte a byte (`tools/src/gtm-*.html`); não mexa neles.** A medição é toda no
 contêiner: não entra gtag, pixel nem código de conversão no HTML.
 
 Testado com o contêiner real em 2026-10-25 (`conversoes.js`), **idêntico no site
@@ -295,7 +338,8 @@ anterior e no redesign**. Cada clique num dos 6 botões gera:
 - **conversão do Google Ads**, conta `17636429356`, rótulo `EjhyCLaV4P0cEKyc2tlB`.
 
 A bolha e os botões "Agendar" não disparam nada disso. Em 2026-11-01 deu o mesmo
-nas três páginas de assunto (`conversoes-paginas.js`): o acionador não é restrito à
+nas três páginas de assunto, e em 2026-11-15 também na infantil
+(`conversoes-paginas.js`): o acionador não é restrito à
 página inicial, e o `page_view` do GA4 sai em todas. O acionador é "Click URL
 contém wa.me", e o GTM identifica o botão por **`data-formato` e `data-origem`**.
 As classes do Divi (`et_pb_*`) saíram no redesign.
@@ -318,9 +362,10 @@ perderia.
 ### Errata de conteúdo
 
 Erros de digitação que vieram do texto original, corrigidos em 2026-09-19 e
-2026-09-20. Vivem na lista `ERRATA` do `build.py`, aplicada à captura; cada entrada
-exige exatamente uma ocorrência, senão o build falha. Hoje só os depoimentos saem
-da captura; as três primeiras entradas ficam para a errata seguir conferida.
+2026-09-20. Até 2026-11-15 viviam na lista `ERRATA` do `build.py`, aplicada à
+captura. Hoje os textos corrigidos dos depoimentos estão direto em
+`tools/src/depoimentos.json`, e os do próprio site, no molde. A tabela fica como
+registro do que mudou em relação ao original.
 
 | era | virou |
 |---|---|
