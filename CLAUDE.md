@@ -43,6 +43,7 @@ dois minutos.
 | 2026-10-28 | Rótulos "Consulta particular online/presencial", segunda linha da faixa, negritos (à mão no `index.html`) |
 | 2026-11-01 | **Páginas de assunto** `/consulta-online/`, `/tdah-adulto/`, `/autismo-adulto/`; item "Consulta online" no menu; menu em linha só a partir de 1200 px |
 | 2026-11-15 | O build deixa de ler a captura do WordPress: imagens, GTM, depoimentos e links passam para `tools/src/` |
+| 2026-11-15 | Bloco "O que é o RQE e como conferir" (`#rqe`) e linha do RQE abaixo do primeiro par de botões de cada página; nome, CRM e RQE em constantes |
 | 2026-11-15 | Mensagens do WhatsApp com triagem (nome, idade, cidade); presencial de segunda a sexta; página `/psiquiatra-infantil-goiania/` pronta, **não publicada** (`PUBLICAR_INFANTIL = False`) |
 
 ## Domínio e DNS — virada CONCLUÍDA
@@ -356,7 +357,21 @@ perderia.
 - Sem promessa ou garantia de resultado, "cura", antes/depois, sensacionalismo ou
   urgência artificial.
 - Sem preço, valor ou desconto. Sem depoimento novo nem número de pacientes.
-- **Nome, CRM e RQE ficam visíveis no topo (hero) e no rodapé.**
+- **Nome, CRM e RQE ficam visíveis no topo (hero) e no rodapé.** Saem das constantes
+  `NOME`, `CRM`, `RQE_PSIQUIATRIA` (20033) e `RQE_INFANCIA` (20034) do `build.py`;
+  os números não aparecem soltos em nenhum molde.
+- **O que é o RQE:** a inicial tem o bloco `id="rqe"` na seção Formação, logo abaixo
+  do cartão "Títulos de especialista". Ele tem o texto explicativo e o link para a
+  "Busca por médicos" do CFM (`CFM_BUSCA`). Cada página tem, uma vez, logo abaixo do
+  primeiro par de botões, a linha "Psiquiatra especialista com RQE registrado no
+  CRM. O que é o RQE?", com link para `#rqe` (`../#rqe` nas internas). A pergunta
+  "O que significa psiquiatra com RQE?" está nas perguntas frequentes da página
+  infantil, a única que tem essa seção.
+- **A confirmar com o médico:** nas regras do CFM, Psiquiatria da Infância e
+  Adolescência costuma constar como *área de atuação* da Psiquiatria. O site chama
+  os dois registros de "Títulos de especialista". Se a "Busca por médicos" mostrar o
+  RQE 20034 como área de atuação, o cartão da Formação e a frase do bloco `#rqe`
+  precisam de ajuste.
 - Não invente formação, título ou serviço que não esteja no site.
 
 ### Errata de conteúdo

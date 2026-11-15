@@ -185,3 +185,12 @@ a:hover{color:var(--marca-escura)}
 /* links discretos da pagina inicial para as paginas de assunto */
 .relacionados{margin:20px 0 0;font-size:.9rem;color:var(--suave)}
 .texto h3{margin:1.4em 0 .3em}
+
+/* RQE: bloco explicativo na secao Formacao e a linha curta abaixo do primeiro par de botoes */
+.rqe{margin-top:16px;padding:22px 22px 6px;display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--linha);border-radius:var(--raio)}
+.rqe__selo{flex:0 0 auto;width:30px;height:30px;color:var(--marca)}
+.rqe h3{margin:2px 0 .5em}
+.rqe p{font-size:.98rem;color:var(--suave)}
+@media (max-width:599px){.rqe{flex-direction:column;gap:8px}}
+.linha-rqe{margin:10px 0 0;font-size:.85rem;color:var(--suave)}
+@media (max-width:599px){.linha-rqe{text-align:center}}
