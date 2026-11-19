@@ -41,7 +41,7 @@ a:hover{color:var(--marca-escura)}
 
 /* cabecalho */
 .topo{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);border-bottom:1px solid var(--linha);-webkit-backdrop-filter:saturate(1.4) blur(6px);backdrop-filter:saturate(1.4) blur(6px)}
-.topo__barra{max-width:1200px;margin:0 auto;padding:0 20px;height:var(--topo);display:flex;align-items:center;gap:20px}
+.topo__barra{max-width:1260px;margin:0 auto;padding:0 20px;height:var(--topo);display:flex;align-items:center;gap:20px}
 .topo__logo{flex:0 0 auto;margin-right:auto}
 /* o desenho do logo ocupa so de y=15 a y=83 da caixa de 100 do SVG: a imagem cresce e
    a margem negativa devolve o vazio de cima e de baixo, sem mexer no arquivo */
@@ -56,10 +56,10 @@ a:hover{color:var(--marca-escura)}
 .topo__menu summary::-webkit-details-marker{display:none}
 .topo__menu nav{position:absolute;right:0;top:calc(100% + 8px);min-width:220px;padding:8px;background:#fff;border:1px solid var(--linha);border-radius:var(--raio);box-shadow:0 8px 24px rgba(20,40,50,.08)}
 .topo__menu nav a{display:block;padding:10px 12px;border-radius:6px}
-/* o cabecalho inteiro (logo + 7 itens + Agendar) precisa de ~1175px: abaixo de 1200,
+/* o cabecalho inteiro (logo + 8 itens + Agendar) precisa de ~1230px: abaixo de 1280,
    os links vao para o menu de tres linhas, senao a pagina rola de lado */
-@media (max-width:1199px){.topo__nav{display:none}.topo__menu{display:block}}
-@media (max-width:1199px){:root{--topo:72px}.topo__logo img{height:72px;margin:-11px 0 -12px}}
+@media (max-width:1279px){.topo__nav{display:none}.topo__menu{display:block}}
+@media (max-width:1279px){:root{--topo:72px}.topo__logo img{height:72px;margin:-11px 0 -12px}}
 @media (max-width:420px){.topo__barra{gap:8px;padding:0 12px}.topo__logo img{height:64px;margin:-10px 0 -11px}}
 @media (max-width:359px){.topo__logo img{height:50px;margin:-7px 0 -8px}}
 
@@ -194,3 +194,39 @@ a:hover{color:var(--marca-escura)}
 @media (max-width:599px){.rqe{flex-direction:column;gap:8px}}
 .linha-rqe{margin:10px 0 0;font-size:.85rem;color:var(--suave)}
 @media (max-width:599px){.linha-rqe{text-align:center}}
+
+/* blog: indice /blog/ e materias /blog/<slug>/ */
+.trilha{margin:0 0 20px;font-size:.85rem;color:var(--suave)}
+.trilha ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px}
+.trilha li+li::before{content:"›";margin-right:6px;color:var(--suave)}
+.trilha a{color:var(--suave)}
+.conteudo--artigo{max-width:760px}
+.artigo{padding-top:40px}
+.artigo h1{margin-bottom:.4em}
+.artigo__autoria{margin:0 0 24px;font-size:.88rem;line-height:1.55;color:var(--suave)}
+.artigo__capa img{width:100%;height:auto;border-radius:var(--raio)}
+.artigo__capa{margin:0 0 28px}
+.artigo__capa figcaption{margin-top:6px;font-size:.8rem;color:var(--suave)}
+.artigo>.conteudo>p,.artigo>.conteudo>ul{font-size:18px;line-height:1.7}
+.artigo h2{margin:1.8em 0 .5em;font-size:clamp(1.35rem,1.15rem + .8vw,1.65rem)}
+.artigo ul{margin:0 0 1.2em;padding:16px 20px 16px 40px;background:var(--fundo-claro);border-radius:var(--raio)}
+.artigo li{margin-bottom:.45em}
+.artigo li:last-child{margin-bottom:0}
+.artigo__resumo{margin:0 0 8px;padding:16px 20px;border-left:4px solid var(--marca);background:var(--marca-clara);border-radius:0 var(--raio) var(--raio) 0}
+.artigo__resumo p{margin:0;font-size:1rem;line-height:1.6;color:var(--marca)}
+.alerta{margin:0 0 24px;padding:16px 20px;border:1.5px solid #b3261e;border-radius:var(--raio);background:#fdf3f2}
+.alerta p{margin:0;font-size:1rem;line-height:1.6;color:#5c1410}
+.alerta a{color:#8c1d18;font-weight:600}
+.artigo__aviso{margin:32px 0 0;padding-top:16px;border-top:1px solid var(--linha);font-size:.92rem!important;color:var(--suave)}
+.blog-cards{list-style:none;margin:32px 0 0;padding:0;display:grid;grid-template-columns:1fr;gap:20px}
+@media (min-width:700px){.blog-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1000px){.blog-cards:not(.blog-cards--dois){grid-template-columns:repeat(3,minmax(0,1fr))}}
+.blog-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden}
+/* capas sao fotos de pessoas: se o recorte mudar, o enquadramento preserva os rostos */
+.blog-card__capa img,.artigo__capa img{object-position:center 35%}
+.blog-card__capa img{width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover}
+.blog-card h2,.blog-card h3{margin:18px 20px 8px;font-size:1.15rem;line-height:1.3}
+.blog-card h2 a,.blog-card h3 a{color:var(--marca);text-decoration:none}
+.blog-card h2 a:hover,.blog-card h3 a:hover{text-decoration:underline}
+.blog-card p{margin:0 20px 12px;font-size:.95rem;color:var(--suave)}
+.blog-card__ler{margin:auto 20px 20px;font-weight:600}

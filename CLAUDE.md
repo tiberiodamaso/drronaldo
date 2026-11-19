@@ -8,7 +8,8 @@ O site estático de **Dr. Ronaldo Lopes** — psiquiatra geral e da infância e
 adolescência, em Goiânia (GO), CRM-GO 15751, RQE 20033 e 20034. Conteúdo em pt-BR.
 Uma página inicial (`index.html`) com navegação por âncoras, três **páginas de
 assunto** para os anúncios (`consulta-online/`, `tdah-adulto/`, `autismo-adulto/`,
-cada uma com o seu `index.html`) e a árvore `assets/`.
+cada uma com o seu `index.html`), um **blog** (`blog/` e uma pasta por matéria) e a
+árvore `assets/`.
 
 O site é uma landing page: hero, sete seções (Como funciona a consulta online,
 Especialidades, Formação, Atuação, Experiência, Depoimentos, Contato) e rodapé, com
@@ -42,6 +43,7 @@ dois minutos.
 | 2026-10-25 | **Redesign**: o Divi saiu; HTML semântico, CSS e JS próprios |
 | 2026-10-28 | Rótulos "Consulta particular online/presencial", segunda linha da faixa, negritos (à mão no `index.html`) |
 | 2026-11-01 | **Páginas de assunto** `/consulta-online/`, `/tdah-adulto/`, `/autismo-adulto/`; item "Consulta online" no menu; menu em linha só a partir de 1200 px |
+| 2026-11-19 | **Blog**: `/blog/` e 3 matérias; item "Blog" no menu; menu em linha só a partir de 1280 px |
 | 2026-11-15 | O build deixa de ler a captura do WordPress: imagens, GTM, depoimentos e links passam para `tools/src/` |
 | 2026-11-15 | Bloco "O que é o RQE e como conferir" (`#rqe`) e linha do RQE abaixo do primeiro par de botões de cada página; nome, CRM e RQE em constantes |
 | 2026-11-15 | Mensagens do WhatsApp com triagem (nome, idade, cidade); presencial de segunda a sexta; página `/psiquiatra-infantil-goiania/` pronta, **não publicada** (`PUBLICAR_INFANTIL = False`) |
@@ -75,10 +77,12 @@ consulta-online/    página de assunto: consulta psiquiátrica online (index.htm
 tdah-adulto/        página de assunto: TDAH em adultos (index.html, gerada)
 autismo-adulto/     página de assunto: autismo em adultos (index.html, gerada)
 psiquiatra-infantil-goiania/  página infantojuvenil presencial; NÃO publicada (noindex)
+blog/               índice do blog e uma pasta por matéria (blog/<slug>/index.html)
 assets/css/site.css a folha única do site (gerada a partir de tools/src/site.css)
 assets/js/site.js   7 linhas: fecha o menu do celular após escolher uma seção
 assets/img/         logo horizontal, logo vertical branco, 3 favicons,
-                    2 fotos (consultorio-1, consultorio-2) em 3 tamanhos cada
+                    2 fotos (consultorio-1, consultorio-2) em 3 tamanhos cada;
+                    blog/: capas das matérias (.webp e .jpg)
 CNAME               drronaldolopes.com.br, para o GitHub Pages
 robots.txt          libera tudo, aponta o sitemap
 sitemap.xml         as páginas publicadas (gerado da lista PAGINAS do build.py)
@@ -89,7 +93,7 @@ NOTICE.txt          licenças de terceiros (hoje, só o ícone do WhatsApp, CC0)
 A página não carrega biblioteca nenhuma nem fonte web: o texto usa a fonte do
 sistema. Os únicos hosts externos que ela contata são os do Google Tag Manager e das
 tags que o contêiner dispara. Os links de saída vão para `wa.me`,
-`www.instagram.com` e `www.google.com`.
+`www.instagram.com`, `www.google.com`, `portal.cfm.org.br` e `cvv.org.br`.
 
 ### Desenho
 
@@ -100,11 +104,13 @@ tags que o contêiner dispara. Os links de saída vão para `wa.me`,
 - Botões: uma linha só (`white-space: nowrap`), altura de 44 px, ícone à esquerda.
   Conferido até 320 px de largura.
 - Cabeçalho fixo (`position: sticky`) com logo, links e botão "Agendar". **O menu
-  só fica em linha a partir de 1200 px**: logo, 7 itens e "Agendar" somam ~1175 px.
+  só fica em linha a partir de 1280 px**: logo, 8 itens e "Agendar" somam ~1230 px
+  (era 1200 px com 7 itens, até o item "Blog" entrar em 2026-11-19).
   Abaixo disso os links vão para um `<details>` de três linhas (funciona sem JS).
   Até 2026-11-01 a troca era em 960 px, e o cabeçalho transbordava entre 960 e
-  1023 px, com rolagem de lado. **Se acrescentar item ao menu, meça de novo.** A
-  barra do cabeçalho tem até 1200 px de largura; o conteúdo da página, 1120. As
+  1023 px, com rolagem de lado. **Se acrescentar item ao menu, meça de novo** com
+  `tools/menu.js`. A barra do cabeçalho tem até 1260 px de largura; o conteúdo da
+  página, 1120. As
   âncoras descontam o cabeçalho com `scroll-margin-top: calc(var(--topo) + 12px)`,
   e a rolagem suave respeita `prefers-reduced-motion`.
 - **O desenho do logo horizontal ocupa só de y=15 a y=83 da caixa de 100 do SVG.**
@@ -129,9 +135,13 @@ pasta.**
 | `src/img/` | as 11 imagens do site (logos, favicons, 2 fotos em 3 tamanhos); o build copia todas para `assets/img/` |
 | `src/gtm-head.html`, `src/gtm-noscript.html` | o par do Google Tag Manager, byte a byte como estava no WordPress |
 | `src/depoimentos.json` | os 5 depoimentos (texto e autor), já com a errata aplicada |
+| `src/blog/materias/*.md` | as matérias do blog, aprovadas pelo médico (cabeçalho entre `---` + Markdown) |
+| `src/blog/img/` | as capas, em `.webp` e `.jpg` (fotos desde 2026-11-19) |
+| `src/blog.html`, `src/blog-materia.html` | o `<main>` do índice e de cada matéria |
 | `build.py` | copia as imagens, preenche o molde de cada página e confere tudo |
 | `verify.py` | resolve toda referência local; falha em qualquer absoluta na raiz ou ausente |
-| `probe.py` | headless, em todas as páginas e 9 larguras (320 a 1920, incluindo 1100): GTM carregando, erros de JS, transbordo, imagens quebradas |
+| `probe.py` | headless, em todas as páginas (até dois níveis: `blog/<slug>/`) e 9 larguras (320 a 1920, incluindo 1100): GTM carregando, erros de JS, transbordo, imagens quebradas |
+| `menu.js` | mede quanto o cabeçalho precisa e se o menu cabe em cada largura |
 | `compara.py` | compara dois `index.html` e falha se a medição puder ter mudado (ver abaixo) |
 | `conversoes.js` | clica em cada botão de WhatsApp com o GTM real e compara o que as tags enviariam, site anterior × novo |
 | `conversoes-paginas.js` | o mesmo, numa versão só, em todas as páginas: cada `wa.me` precisa gerar GA4 + Ads; "Agendar" e bolha, nada |
@@ -180,6 +190,40 @@ em `assets/` que não venha de `tools/src/` some no build.** Em 2026-11-15 havia
 um retrato do médico fora do git (`assets/img/WhatsApp Image 2026-09-21 at
 16.22.20.jpeg`), ainda sem uso: copie-o para fora antes do build e devolva depois,
 ou guarde-o fora de `assets/`.
+
+### Blog
+
+As matérias chegam prontas e aprovadas pelo médico. Para criar ou ajustar, edite o
+`.md` em `tools/src/blog/materias/` (o pacote `conteudo-blog/` que veio com as três
+primeiras foi movido para lá em 2026-11-19) e rode o build. **O texto vai ao ar sem
+mudar uma palavra:** o build compara o texto gerado com o do `.md` e falha se
+diferir. Erro de texto se corrige no `.md`, com o médico de acordo.
+
+- `/blog/` (H1 "Matérias para pais e responsáveis") lista as matérias, da mais
+  recente para a mais antiga; com a mesma data, na ordem dos arquivos.
+- `/blog/<slug>/`: trilha, H1, autoria (`AUTORIA`, com nome completo, CRM e os dois
+  RQE), data (`DATA_BLOG`), capa (`<picture>` webp + jpg), resumo, corpo, aviso
+  "Este conteúdo é informativo...", botões (presencial primeiro) e "Leia também".
+  Open Graph `article`, Twitter Card, `keywords` e JSON-LD (`BlogPosting` +
+  `BreadcrumbList`; o `reviewedBy` fica na `WebPage` de `mainEntityOfPage`, que é
+  onde o schema.org o define).
+- **Capas:** fotos ilustrativas 1200×630, com a legenda "Imagem ilustrativa." na
+  matéria (não nos cartões). O `alt` sai do campo `alt` do `.md`. **Para trocar uma
+  capa, ponha a imagem em `tools/src/blog/img/`, não em `assets/`**: o build regrava
+  `assets/` a partir de lá. Se o nome do arquivo não mudar, suba `CAPA_VERSAO` no
+  `build.py` (hoje `2`), que entra como `?v=` em `src`, `srcset`, `og:image`,
+  `twitter:image` e no JSON-LD, para ninguém ver a imagem antiga do cache. Em
+  2026-11-19 vieram só os `.webp` das fotos; os `.jpg` foram gerados a partir deles
+  (qualidade 88). Nos cartões, `object-position: center 35%` preserva os rostos.
+- A matéria de automutilação tem a caixa de risco (192 / CVV 188) no topo e no fim
+  do texto (`COM_ALERTA`).
+- Links `[texto](#id)`: o destino de cada id está em `LINKS_BLOG`. Os de
+  `LINKS_FUTUROS` (matérias que ainda não existem) saem só como texto, com um
+  comentário `<!-- link futuro: ... -->`. Ao publicar uma dessas matérias, mova o id
+  de `LINKS_FUTUROS` para `LINKS_BLOG`.
+- Botões: `data-origem` = `pagina-blog` no índice e `pagina-blog-<slug>` nas
+  matérias. O GTM não depende de nenhum valor de `data-origem` (conferido no `gtm.js`
+  em 2026-11-19); ele só lê o valor e o manda ao GA4.
 
 **Antes de publicar qualquer mudança**, guarde o `index.html` anterior e rode:
 
