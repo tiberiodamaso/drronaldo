@@ -38,6 +38,8 @@ a:hover{color:var(--marca-escura)}
 
 /* faixa de formato */
 .faixa{margin:0;padding:8px 16px;background:var(--marca-clara);color:var(--marca);font-size:.84rem;font-weight:500;line-height:1.45;text-align:center}
+/* no celular as duas faixas ficam mais baixas, para o primeiro botao de WhatsApp subir */
+@media (max-width:599px){.faixa{padding:5px 10px;font-size:.76rem;line-height:1.28}.faixa+.faixa{padding-top:0}}
 
 /* cabecalho */
 .topo{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);border-bottom:1px solid var(--linha);-webkit-backdrop-filter:saturate(1.4) blur(6px);backdrop-filter:saturate(1.4) blur(6px)}
@@ -159,12 +161,19 @@ a:hover{color:var(--marca-escura)}
 .rodape p{margin:0 0 .5em}
 .rodape strong{color:#fff}
 .rodape :focus-visible{outline-color:#fff}
+.rodape a{color:#fff}
 
 /* bolha flutuante: rola ate os botoes de agendamento. Nao leva wa.me, de proposito:
    a conversao do GTM e so o clique nos botoes online/presencial */
 .bolha{position:fixed;right:20px;bottom:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:40;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--whatsapp);color:#fff;box-shadow:0 4px 14px rgba(10,40,25,.25);transition:background-color .15s}
 .bolha:hover{background:var(--whatsapp-escuro);color:#fff}
 .bolha svg{width:32px;height:32px;fill:currentColor}
+/* no celular a bolha some enquanto um bloco de botoes de WhatsApp esta na tela (site.js):
+   ali ela e redundante e cobriria o texto junto dos botoes. Sem JS, fica sempre visivel. */
+@media (max-width:599px){
+  .bolha{transition:opacity .2s,visibility .2s}
+  .bolha--oculta{opacity:0;visibility:hidden;pointer-events:none}
+}
 @media (max-width:599px){
   .bolha{right:14px;bottom:14px;width:56px;height:56px}
   .rodape{padding-bottom:96px}
@@ -174,7 +183,7 @@ a:hover{color:var(--marca-escura)}
 /* paginas de assunto (consulta-online/, tdah-adulto/, autismo-adulto/): topo com o
    h1 e o primeiro botao, texto corrido em uma coluna estreita, aviso de urgencia */
 .secao.pagina-topo{padding:56px 0 64px}
-@media (max-width:599px){.secao.pagina-topo{padding:36px 0 48px}}
+@media (max-width:599px){.secao.pagina-topo{padding:24px 0 48px}}
 .texto h2{margin-top:1.8em}
 .texto h2:first-child{margin-top:0}
 .texto ul{margin:0 0 1em;padding-left:1.25em}

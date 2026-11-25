@@ -46,6 +46,8 @@ dois minutos.
 | 2026-11-19 | **Blog**: `/blog/` e 3 matérias; item "Blog" no menu; menu em linha só a partir de 1280 px |
 | 2026-11-15 | O build deixa de ler a captura do WordPress: imagens, GTM, depoimentos e links passam para `tools/src/` |
 | 2026-11-15 | Bloco "O que é o RQE e como conferir" (`#rqe`) e linha do RQE abaixo do primeiro par de botões de cada página; nome, CRM e RQE em constantes |
+| 2026-11-24 | `<noscript>` do GTM logo após `<body>`; botões de WhatsApp com 48 px |
+| 2026-11-24 | `/politica-de-privacidade/` (LGPD); telefone, "Atendimento presencial em Goiânia – GO" e link da política no rodapé; H1 de `/consulta-online/` com "psiquiatra online"; faixas mais baixas no celular; bolha some junto aos botões no celular |
 | 2026-11-15 | Mensagens do WhatsApp com triagem (nome, idade, cidade); presencial de segunda a sexta; página `/psiquiatra-infantil-goiania/` pronta, **não publicada** (`PUBLICAR_INFANTIL = False`) |
 
 ## Domínio e DNS — virada CONCLUÍDA
@@ -78,8 +80,10 @@ tdah-adulto/        página de assunto: TDAH em adultos (index.html, gerada)
 autismo-adulto/     página de assunto: autismo em adultos (index.html, gerada)
 psiquiatra-infantil-goiania/  página infantojuvenil presencial; NÃO publicada (noindex)
 blog/               índice do blog e uma pasta por matéria (blog/<slug>/index.html)
+politica-de-privacidade/  política de privacidade (LGPD); sem botão de WhatsApp
 assets/css/site.css a folha única do site (gerada a partir de tools/src/site.css)
-assets/js/site.js   7 linhas: fecha o menu do celular após escolher uma seção
+assets/js/site.js   fecha o menu do celular após escolher uma seção; no celular, esconde
+                    a bolha enquanto um bloco de botões de WhatsApp está na tela
 assets/img/         logo horizontal, logo vertical branco, 3 favicons,
                     2 fotos (consultorio-1, consultorio-2) em 3 tamanhos cada;
                     blog/: capas das matérias (.webp e .jpg)
@@ -93,7 +97,8 @@ NOTICE.txt          licenças de terceiros (hoje, só o ícone do WhatsApp, CC0)
 A página não carrega biblioteca nenhuma nem fonte web: o texto usa a fonte do
 sistema. Os únicos hosts externos que ela contata são os do Google Tag Manager e das
 tags que o contêiner dispara. Os links de saída vão para `wa.me`,
-`www.instagram.com`, `www.google.com`, `portal.cfm.org.br` e `cvv.org.br`.
+`www.instagram.com`, `www.google.com`, `portal.cfm.org.br` e `cvv.org.br`; na política
+de privacidade, também `policies.google.com` e `tools.google.com`.
 
 ### Desenho
 
@@ -174,6 +179,8 @@ captura. Todo o resto é do molde.
   página ou num id que não existe;
 - alguma página não tiver um único `<h1>`, a linha de CRM/RQE no topo e no rodapé,
   ou o `<script>` do GTM antes de `</head>` e o `<noscript>` logo depois de `<body>`;
+- o rodapé de alguma página não tiver o telefone, a linha do presencial e o link da
+  política de privacidade, ou sobrar um comentário `molde:` no HTML;
 - duas páginas tiverem o mesmo `<title>` ou a mesma description;
 - sobrar `_blank` sem `noopener`, `et_pb` ou `wp-content`;
 - houver mais de 2 `<script>` numa página (o GTM e o `site.js`).
@@ -291,8 +298,8 @@ a lado no desktop, empilhados e em largura total no celular). Saem de `bloco()` 
   contato. O GTM não lê o texto da mensagem (conferido no `gtm.js`), então ela pode
   mudar; número, classes e atributos, não. Fora de uma troca deliberada da
   mensagem, **o href não muda um byte**, e o `compara.py` confere.
-- Abaixo de cada par: "Respondemos de segunda a sexta, das 9h às 17h."
-  (`HORARIO_WHATSAPP`). Os dias do presencial ficam em `DIAS_PRESENCIAL` ("segunda a
+- Abaixo de cada par: "Respondemos todos os dias, das 9h às 17h." (`HORARIO_WHATSAPP`;
+  até 2026-11-24 era "de segunda a sexta"). Os dias do presencial ficam em `DIAS_PRESENCIAL` ("segunda a
   sexta"); `HORARIO_PRESENCIAL` é `None` porque o site não publica horário do
   presencial: a secretária informa. Nenhum trecho do site dizia "só às terças".
 
@@ -313,7 +320,7 @@ saem da lista `PAGINAS` do `build.py` (função `assunto()`):
 
 | URL | `<h1>` | `data-origem` | nota junto do botão |
 |---|---|---|---|
-| `/consulta-online/` | Consulta psiquiátrica online | `pagina-consulta-online` | Atendimento particular, sem convênio · Todo o Brasil · a partir de 12 anos |
+| `/consulta-online/` | Psiquiatra online: consulta por vídeo (desde 2026-11-24; casa com a palavra-chave "psiquiatra online", que aparece também uma vez no primeiro parágrafo) | `pagina-consulta-online` | Atendimento particular, sem convênio · Todo o Brasil · a partir de 12 anos |
 | `/tdah-adulto/` | TDAH em adultos: avaliação com psiquiatra | `pagina-tdah-adulto` | Atendimento para adultos, online, em todo o Brasil |
 | `/autismo-adulto/` | Autismo em adultos: avaliação com psiquiatra | `pagina-autismo-adulto` | Atendimento para adultos, online, em todo o Brasil |
 
@@ -363,7 +370,31 @@ Pronta para quando a campanha migrar para o presencial infantil. **Publicar é t
 
 **A faixa do topo** ("Atendimento online para todo o Brasil e brasileiros no
 exterior · Presencial somente em Goiânia") fica no fluxo, acima do cabeçalho, e não
-acompanha a rolagem. Quem fica fixo é o cabeçalho.
+acompanha a rolagem. Quem fica fixo é o cabeçalho. Abaixo de 600 px as duas faixas
+ficam mais baixas (fonte de 12 px), e o topo das páginas internas tem menos respiro,
+para o primeiro botão de WhatsApp subir (~45 px nas páginas de assunto).
+
+**A bolha flutuante**, abaixo de 600 px, some enquanto algum bloco de botões de
+WhatsApp (`.agendar`) está na tela (`site.js`, IntersectionObserver), para não cobrir
+o texto junto dos botões. Sem JS, fica sempre visível. No desktop, nunca some.
+
+### Rodapé e política de privacidade
+
+- O rodapé de todas as páginas tem "WhatsApp: (62) 98113-4061" (texto, sem link: o
+  caminho para o WhatsApp são os botões; sai de `TEL_VISIVEL`), "Atendimento
+  presencial em Goiânia – GO" e o link "Política de privacidade". O build confere.
+- O endereço do consultório no rodapé está preparado num comentário `<!-- molde: ... -->`
+  do `base.html`, para ativar só com autorização do Dr. O build apaga os comentários
+  `molde:` do HTML publicado. (O endereço já aparece na seção Contato da inicial.)
+- `/politica-de-privacidade/` (`PAGINA_PRIVACIDADE`, tipo `privacidade`): controlador,
+  medição (GA4 e Ads pelo GTM), WhatsApp, sigilo médico, direitos do art. 18 da LGPD.
+  Não tem botão de WhatsApp nem linha do RQE; "Agendar" e a bolha levam a `../#agendar`
+  (campo `AGENDAR` do molde). **O canal para pedidos sobre dados sai de
+  `EMAIL_PRIVACIDADE`**: enquanto for o marcador `[E-MAIL DE CONTATO]`, a página indica
+  o WhatsApp (62) 98113-4061, como texto e sem link `wa.me` (um link contaria como
+  conversão); quando virar um e-mail, sai como link `mailto:`. Ao mudar o texto,
+  atualize `PRIVACIDADE_ATUALIZADA`. Não há banner de cookies: fica para quando o
+  Consent Mode for decidido.
 
 A contagem de conversões caiu de patamar a partir de 2026-10-25: há menos links
 `wa.me` e um passo de escolha antes do WhatsApp. Não compare com o período anterior
