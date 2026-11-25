@@ -68,7 +68,7 @@ a:hover{color:var(--marca-escura)}
 .botao--secundario{background:#fff;color:var(--marca);border:1.5px solid var(--marca)}
 .botao--secundario:hover{background:var(--marca);color:#fff}
 .botao--compacto{padding:8px 16px;font-size:.95rem}
-.botao--whatsapp{background:var(--whatsapp);color:#fff;border:1.5px solid var(--whatsapp)}
+.botao--whatsapp{min-height:48px;background:var(--whatsapp);color:#fff;border:1.5px solid var(--whatsapp)}
 .botao--whatsapp:hover{background:var(--whatsapp-escuro);border-color:var(--whatsapp-escuro);color:#fff}
 /* o clique no icone precisa cair no <a>: num acionador "Todos os elementos" do GTM,
    um clique com alvo no <svg> chega sem Click URL e a conversao se perde */

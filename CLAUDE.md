@@ -101,7 +101,8 @@ tags que o contêiner dispara. Os links de saída vão para `wa.me`,
 - **O verde só aparece nos botões de WhatsApp e na bolha flutuante**: `#117a43`
   (contraste 5,4:1 com o branco, passa AA). O verde de marca do WhatsApp,
   `#25D366`, tem 2:1 com texto branco e reprova.
-- Botões: uma linha só (`white-space: nowrap`), altura de 44 px, ícone à esquerda.
+- Botões: uma linha só (`white-space: nowrap`), altura mínima de 44 px (48 px nos de
+  WhatsApp, desde 2026-11-24), ícone à esquerda.
   Conferido até 320 px de largura.
 - Cabeçalho fixo (`position: sticky`) com logo, links e botão "Agendar". **O menu
   só fica em linha a partir de 1280 px**: logo, 8 itens e "Agendar" somam ~1230 px
@@ -172,7 +173,7 @@ captura. Todo o resto é do molde.
 - algum link entre páginas ou âncora (`#…`, `../#…`, `../tdah-adulto/`) cair numa
   página ou num id que não existe;
 - alguma página não tiver um único `<h1>`, a linha de CRM/RQE no topo e no rodapé,
-  ou o par do GTM antes de `</head>` e depois de `</main>`;
+  ou o `<script>` do GTM antes de `</head>` e o `<noscript>` logo depois de `<body>`;
 - duas páginas tiverem o mesmo `<title>` ou a mesma description;
 - sobrar `_blank` sem `noopener`, `et_pb` ou `wp-content`;
 - houver mais de 2 `<script>` numa página (o GTM e o `site.js`).
@@ -371,8 +372,8 @@ como se fosse a mesma métrica.
 ## Google Tag Manager e conversões
 
 O contêiner é `GTM-PZ346GTV`, com o snippet `<script>` no `<head>` (entre o
-`viewport` e os favicons) e o `<noscript>` no fim do `<body>`, depois de todo o
-conteúdo. **Os dois vêm do WordPress byte a byte (`tools/src/gtm-*.html`); não mexa neles.** A medição é toda no
+`viewport` e os favicons) e o `<noscript>` logo depois da abertura do `<body>`, como
+o Google pede (até 2026-11-24 ficava no fim do `<body>`; o build falha se sair do lugar). **Os dois vêm do WordPress byte a byte (`tools/src/gtm-*.html`); não mexa neles.** A medição é toda no
 contêiner: não entra gtag, pixel nem código de conversão no HTML.
 
 Testado com o contêiner real em 2026-10-25 (`conversoes.js`), **idêntico no site
