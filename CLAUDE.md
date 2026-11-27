@@ -48,6 +48,7 @@ dois minutos.
 | 2026-11-15 | Bloco "O que é o RQE e como conferir" (`#rqe`) e linha do RQE abaixo do primeiro par de botões de cada página; nome, CRM e RQE em constantes |
 | 2026-11-24 | `<noscript>` do GTM logo após `<body>`; botões de WhatsApp com 48 px |
 | 2026-11-24 | `/politica-de-privacidade/` (LGPD); telefone, "Atendimento presencial em Goiânia – GO" e link da política no rodapé; H1 de `/consulta-online/` com "psiquiatra online"; faixas mais baixas no celular; bolha some junto aos botões no celular |
+| 2026-11-27 | Valor da consulta abaixo do primeiro botão de `/consulta-online/`, `/tdah-adulto/` e `/autismo-adulto/`; nova seção "Como é a avaliação" em `/autismo-adulto/` (três consultas e laudo) |
 | 2026-11-15 | Mensagens do WhatsApp com triagem (nome, idade, cidade); presencial de segunda a sexta; página `/psiquiatra-infantil-goiania/` pronta, **não publicada** (`PUBLICAR_INFANTIL = False`) |
 
 ## Domínio e DNS — virada CONCLUÍDA
@@ -324,6 +325,14 @@ saem da lista `PAGINAS` do `build.py` (função `assunto()`):
 | `/tdah-adulto/` | TDAH em adultos: avaliação com psiquiatra | `pagina-tdah-adulto` | Atendimento para adultos, online, em todo o Brasil |
 | `/autismo-adulto/` | Autismo em adultos: avaliação com psiquiatra | `pagina-autismo-adulto` | Atendimento para adultos, online, em todo o Brasil |
 
+- Abaixo do primeiro botão das três, o bloco do valor da consulta (`.agendar__valor`,
+  ver as regras do CFM abaixo). Em `/consulta-online/` a nota do botão do topo é só
+  "Todo o Brasil · a partir de 12 anos", para não repetir "particular, sem convênio";
+  o botão do fim mantém a nota completa e não tem o valor.
+- `/autismo-adulto/`, "Como é a avaliação": em geral três consultas (duas com o
+  paciente, uma com os pais ou quem acompanhou a infância; sem os pais, as três com o
+  paciente) e laudo se o diagnóstico for confirmado. Texto do cliente, sem alteração.
+
 - Mesmo molde da inicial (faixa, cabeçalho, menu, rodapé, GTM), com `<title>`,
   description, canonical e Open Graph próprios. A imagem do Open Graph é o
   `consultorio-1-980x1307.jpeg`; no corpo não há foto.
@@ -432,7 +441,16 @@ perderia.
   "renomado", "único").
 - Sem promessa ou garantia de resultado, "cura", antes/depois, sensacionalismo ou
   urgência artificial.
-- Sem preço, valor ou desconto. Sem depoimento novo nem número de pacientes.
+- Sem desconto, promoção nem preço fora do texto aprovado. Sem depoimento novo nem
+  número de pacientes.
+- **Valor da consulta** (desde 2026-11-27, pedido do cliente): só nas três páginas de
+  assunto, logo abaixo do primeiro botão de WhatsApp, com o texto de
+  `VALOR_CONSULTA_TEXTO` no `build.py`, igual ao do anúncio: "**Valor da consulta:** R$ 100
+  para reservar o horário + 4x de R$ 200 no cartão de crédito. Atendimento particular,
+  não atendemos convênios." Não troque por total ("R$ 900"), "a partir de" nem Pix. O
+  build falha se o bloco faltar numa dessas páginas, sair do bloco do primeiro botão ou
+  aparecer (ou `R$`) em qualquer outra página. A inicial, o blog e a infantil não
+  mostram valor.
 - **Nome, CRM e RQE ficam visíveis no topo (hero) e no rodapé.** Saem das constantes
   `NOME`, `CRM`, `RQE_PSIQUIATRIA` (20033) e `RQE_INFANCIA` (20034) do `build.py`;
   os números não aparecem soltos em nenhum molde.

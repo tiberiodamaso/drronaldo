@@ -82,11 +82,12 @@ a:hover{color:var(--marca-escura)}
 .agendar__opcao{display:flex;flex-direction:column;gap:6px}
 .agendar__nota{margin:0;font-size:.85rem;color:var(--suave)}
 .agendar__horario{margin:14px 0 0;font-size:.85rem;color:var(--suave)}
+.agendar__valor{margin:14px 0 0}
 @media (max-width:599px){
   .agendar__botoes{flex-direction:column}
   .agendar__opcao .botao{width:100%}
   .agendar__nota{text-align:center}
-  .agendar__horario{text-align:center}
+  .agendar__horario,.agendar__valor{text-align:center}
 }
 @media (max-width:359px){.agendar__opcao .botao{padding:10px 12px;font-size:.94rem}}
 
